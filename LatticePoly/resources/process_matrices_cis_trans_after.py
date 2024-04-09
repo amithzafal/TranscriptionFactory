@@ -111,7 +111,7 @@ matric_names=[]
 for folder in os.listdir(outputDir)[9:]:
 	if(folder.endswith("scool")==False and folder.endswith(".res")==False and folder.endswith('.gz')==False):
 		for file_name in os.listdir(outputDir+'/'+folder):
-			if file_name.endswith('hic.cool')==True and file_name.startswith('cycles')==False and file_name.startswith('copy')==False:
+			if file_name.endswith('.cool')==True and file_name.startswith('cycles')==False and file_name.startswith('copy')==False:
 				if(file_name.endswith('cis_hic.cool')==True or file_name.endswith('trans_hic.cool')==True):
 					print("Found matrix name = "+str(file_name))
 					matric_names.append(file_name)

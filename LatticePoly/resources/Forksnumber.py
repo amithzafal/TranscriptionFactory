@@ -13,14 +13,14 @@ import math
 import numpy as np
 
 from utils import msdFFT
-from vtkReader import vtkReader
+from vtkReader_multi import vtkReader
 import networkx as nx
 import time
 import json
 
 class Forksnumber():
 
-	def __init__(self, outputDir, initFrame, threshold=0.5, nMax=10, cutoff=1/2**0.5 + 1e-3):
+	def __init__(self, outputDir,  initFrame, threshold=0.5, nMax=10, cutoff=1/2**0.5 + 1e-3):
 		self.reader = vtkReader(outputDir, initFrame, readLiq=False, readPoly=True)
 		self.posHist = []
 		self.ForkPos =[]
@@ -141,7 +141,6 @@ if __name__ == "__main__":
 
 	outputDir = sys.argv[1]
 	initFrame = int(sys.argv[2])
-	
 	forksnumb = Forksnumber(outputDir, initFrame=initFrame)
 
 

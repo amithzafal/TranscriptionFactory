@@ -14,26 +14,25 @@ import numpy as np
 import cooler
 from scipy.spatial import cKDTree
 from cooler.create import ArrayLoader
-from vtkReader_multi import vtkReader
+from vtkReader import vtkReader
 
 from scipy.spatial.distance import pdist, squareform
 
 
 class MonomerDmap():
 	def __init__(self, outputDir, initFrame):
-		self.readers=[]
-		for i in range(0,16):
-			self.readers.append(vtkReader(outputDir, i,initFrame,readLiq=False, readPoly=True))
-		self.contactFile = os.path.join(outputDir,"r_"+str(r)+"_"+str(initFrame)+ "_"+str(interval)+"full_genome.cool")
+		self.reader = vtkReader(outputDir, initFrame,readLiq=False, readPoly=True)
+		self.contactFile = os.path.join(self.reader.outputDir,"r_"+str(r)+"_"+str(initFrame)+ "_G1_after100_hic.cool")
+		self.timeFile = os.path.join(self.reader.outputDir,"cycles_r_"+str(r)+"_"+str(initFrame)+ "_G1_after100_hic.res")
 
 
-		#self.Nchain=0
-		#for t in range(self.reader.nTad):
-		#	if(self.reader.status[t]==-1 or self.reader.status[t]==0):
-		#		self.Nchain+=1
-		#self.timepoint=initFrame #find frame where replication reach the desired percentage
-		#if(self.reader.nTad>self.Nchain):
-		#	print("Chromosome already replicating ")
+		self.Nchain=0
+		for t in range(self.reader.nTad):
+			if(self.reader.status[t]==-1 or self.reader.status[t]==0):
+				self.Nchain+=1
+		self.timepoint=initFrame #find frame where replication reach the desired percentage
+		if(self.reader.nTad>self.Nchain):
+			print("Chromosome already replicating ")
 		#self.timepoint=init_time #find frame where replication starts
 		
 				
@@ -42,7 +41,8 @@ class MonomerDmap():
 		#self.reader = vtkReader(outputDir, self.timepoint,readLiq=False, readPoly=True)
 		#restarted vtk reader from middle frame of desired percentage
 		#compute the hic for the minutes
-		self.Compute(interval)
+		self.Compute(self.reader.N)
+		np.savetxt(self.timeFile, [20] )
 
 		self.Print()
 			
@@ -56,10 +56,7 @@ class MonomerDmap():
 	#NB here is not the finalFrame but the number of iterations
 	def Compute(self,finalFrame):
 		#self.polyAniso = np.zeros((self.reader.N, self.reader.nDom), dtype=np.float32)
-		n_bins=0
-		for reader in self.readers:
-			n_bins+=len(reader.polyPos)
-		self.contactProb = np.zeros((n_bins, n_bins), dtype=np.float32)
+		self.contactProb = np.zeros((self.Nchain, self.Nchain), dtype=np.float32)
 
 		
 
@@ -73,17 +70,19 @@ class MonomerDmap():
 #self.contactProb=np.rint(self.contactProb/finalFrame)
 
 	def ProcessFrame(self, i):
-		full_positions=[]
-		for reader in self.readers:
-			data = next(reader)
-			full_positions.append(data.polyPos)
+		data = next(self.reader)
 
 				 
-		tree1	= cKDTree(np.concatenate(full_positions), boxsize = None)
+		tree1	= cKDTree(data.polyPos[:], boxsize = None)
 		pairs = tree1.query_pairs(r = r*0.71) # NN distance FCC lattice 1/np.sqrt(2) = 0.71
 		for (i,j) in pairs:
-			self.contactProb[i,j] = self.contactProb[i,j] + 1
-			self.contactProb[j,i] = self.contactProb[j,i] + 1
+			if((i<self.Nchain and j>=self.Nchain) or (i>=self.Nchain and j<self.Nchain)): #Interchromatid
+				if(unreplicated[i]==0 and unreplicated[j]==0):
+					self.contactProb[i,j] = self.contactProb[i,j] + 1
+					self.contactProb[j,i] = self.contactProb[j,i] + 1
+			else:
+				self.contactProb[i,j] = self.contactProb[i,j] + 1
+				self.contactProb[j,i] = self.contactProb[j,i] + 1
 			
 			
 
@@ -92,14 +91,13 @@ class MonomerDmap():
 
 
 	def Print(self):
-		Nchains=[]
-		for reader in self.readers:
-			Nchains.append(1000*len(reader.polyPos))
-		chrom_names=["chr" + str(i+1) for i in range(len(Nchains))]
-		chromsizes=pd.Series(Nchains)
-		chromsizes=chromsizes.rename(lambda x: chrom_names[x])
+		
+		#np.savetxt(self.contactFile, self.contactProb )
+		ser={"SC1":self.Nchain*2000}
+		chromsizes=pd.Series(ser)
 		chromsizes=chromsizes.astype('int64')	
-		bins = cooler.binnify(chromsizes, 1000)
+		bins = cooler.binnify(chromsizes, 2000)
+		print(len(bins))
 		pixels = ArrayLoader(bins, self.contactProb, chunksize=10000000)
 		cooler.create_cooler(self.contactFile,bins,pixels)
 		
@@ -108,15 +106,13 @@ class MonomerDmap():
 
 
 if __name__ == "__main__":
-	if len(sys.argv) != 5:
-		print("\033[1;31mUsage is %s outputDir initFrame r interval \033[0m" % sys.argv[0])
+	if len(sys.argv) != 4:
+		print("\033[1;31mUsage is %s outputDir initFrame r\033[0m" % sys.argv[0])
 		sys.exit()
 	
 	outputDir = sys.argv[1]
 	initFrame = int(sys.argv[2])
 	r=float(sys.argv[3])
-	interval=int(sys.argv[4])
-	
 	#init_time=int(sys.argv[4])
 
 

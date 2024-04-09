@@ -33,5 +33,6 @@ ROOTDIR=${SCRIPTDIR}/../..
 ROOTDIR=${SCRIPTDIR}/../..
 
 # Set working directory to root
-rm -rf ${CURRENTDIR}
-#rm -rf /home/ddasaro/LatticeData/cohesionmode_*
+
+#rm -rf /home/ddasaro/LatticePoly_todel
+rm -rf /scratch/Bio/ddasaro/LatticeData/mrt/

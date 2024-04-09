@@ -188,7 +188,7 @@ void MCReplicPoly::Init(int Ninit)
 		
 		std::cout << "Extruder before " << N_extruders <<std::endl;
 		
-		N_extruders = N_extruders*active_cars.size();
+		N_extruders = int(N_extruders*Nchain);
 		std::cout << "Extruder after " << N_extruders <<std::endl;
 
 	}
@@ -895,7 +895,7 @@ double MCReplicPoly::GetEffectiveEnergy() //chiedere Maxime
 			}
 			// if they are already binded compute Etot
 			double thr_distance = (neigh==1) ? 2 : 0.5;
-			if(old_dist<=thr_distance or 1==1)
+			if(old_dist<=thr_distance )
 			{
 				Jpair_anchors1= old_dist<=thr_distance ? 1 : old_dist/2;
 				Jpair_anchors2= new_dist<=thr_distance ? 1 : new_dist/2;

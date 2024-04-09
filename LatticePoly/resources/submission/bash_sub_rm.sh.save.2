@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+##
+##  slurm.sh
+##  LatticePoly
+## 
+##  Created by mtortora on 20/06/2022
+##  Copyright © 2022 ENS Lyon. All rights reserved.
+##
+
+#SBATCH -o %A_%a.out
+#SBATCH -e %A_%a.err
+
+# Relative path to code root directory
+ROOTDIR=${SCRIPTDIR}/../..
+
+#!/bin/bash
+
+
+##
+##  slurm.sh
+##  LatticePoly
+## 
+##  Created by mtortora on 20/06/2022
+##  Copyright © 2022 ENS Lyon. All rights reserved.
+##
+
+#SBATCH -o %A_%a.out
+#SBATCH -e %A_%a.err
+
+# Relative path to code root directory
+ROOTDIR=${SCRIPTDIR}/../..
+
+# Set working directory to root
+#rm -rf ${CURRENTDIR}
+#rm -rf /home/ddasaro/LatticePoly_todel
+rm -rf /scratch/Bio/ddasaro/LatticeData/null_mesc_1D_2/
+rm -rf /scratch/Bio/ddasaro/LatticeData/null_mesc_1D_3/
+rm -rf /scratch/Bio/ddasaro/LatticeData/10_origins_*
+rm -rf /scratch/Bio/ddasaro/LatticeData/25_orgins_*
+rm -rf /scratch/Bio/ddasaro/LatticeData/G1_yeast*
+rm -rf /scratch/Bio/ddasaro/LatticeData/trans*
+rm -rf /scratch/Bio/ddasaro/LatticeData/norepli
+rm -rf /scratch/Bio/ddasaro/LatticeData/null*
+rm -rf /scratch/Bio/ddasaro/LatticeData/stalled*
+
+

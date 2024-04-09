@@ -22,7 +22,7 @@ class PolyMSD():
 		self.reader = vtkReader(outputDir, initFrame, readLiq=False, readPoly=True)
 		
 		self.msdHetFile = os.path.join(self.reader.outputDir, "polyHetMSD.res")
-		self.msdHomFile = os.path.join(self.reader.outputDir, str(time.time())+"polyHomMSD.res")
+		self.msdHomFile = os.path.join(self.reader.outputDir,"polyMSD.res")
 
 		if os.path.exists(self.msdHetFile) & os.path.exists(self.msdHomFile):
 			print("Files '%s' and '%s' already exist - aborting" % (self.msdHetFile, self.msdHomFile))
@@ -44,6 +44,7 @@ class PolyMSD():
 				if self.reader.polyType[idxTad] == 1:
 					self.cumulDistHet += msdFFT(posHist[:, idxTad])
 				else:
+					if(self.reader.SisterID
 					self.cumulDistHom += msdFFT(posHist[:, idxTad])
 							
 				if (idxTad+1) % 1000 == 0:
@@ -89,7 +90,7 @@ class PolyMSD():
 
 	
 	def PrintTad(self, idxTad):
-		msdFile = self.reader.outputDir + "/"+str(time.time())+msdTad%05d.res" % idxTad
+		msdFile = self.reader.outputDir + "/+str(time.time())+msdTad.res" 
 		np.savetxt(msdFile, self.distTad)
 		
 		print("\033[1;32mPrinted TAD MSD to '%s'\033[0m" % msdFile)

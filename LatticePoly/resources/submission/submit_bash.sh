@@ -15,7 +15,7 @@ WTIME=8-00:00:00
 QUEUE="Lake"
 
 # Max. memory per task
-MAXMEM="1G"
+MAXMEM="10G"
 
 # Associated scratch directory
 SCRATCHDIR=/home
