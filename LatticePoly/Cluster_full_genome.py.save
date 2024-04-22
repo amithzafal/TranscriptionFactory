@@ -23,7 +23,7 @@ class cluster_full_genome():
 	def __init__(self, outputDir, initFrame):
 		self.readers=[]
 		self.N_chain=[]
-		for i in range(0,16):
+		for i in range(0,17):
 			self.readers.append(vtkReader(outputDir, i,initFrame,readLiq=False, readPoly=True))
 			self.N_chain.append(np.sum([(self.readers[i].status==-1)+(self.readers[i].status==0)]))
 		self.clusterFile = os.path.join(outputDir,str(r)+"_"+str(initFrame)+"_"+str(interval)+"_cluster_full_genome.res")
@@ -76,7 +76,7 @@ class cluster_full_genome():
 		#print([len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)])
 		self.Forks_number.append(np.sum(np.array(forks_for_chrom)))
 		cis_connected_components=0
-		for i in range(0,16):
+		for i in range(0,17):
 			startpos=int(np.sum(forks_for_chrom[:i]))
 			G_chrom = nx.from_numpy_matrix(A[startpos:int(forks_for_chrom[i]),startpos:int(forks_for_chrom[i])])
 			cis_connected_components+=len([len(c) for c in sorted(nx.connected_components(G_chrom), key=len, reverse=True)])

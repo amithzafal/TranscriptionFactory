@@ -69,18 +69,20 @@ void MCReplicPoly::Init(int Ninit,int chrom, int chrom_pos[3])
 			{
 				std::istringstream ss(line_cars);
 				
-				int d1;
+				float d1;
 				float d2;
 
-				
 				if ( ss >> d1 >>d2)
 				{
-					if(d1==chrom)
+
+					if(int(d1)==chrom)
 					{
 						ChIP.push_back(d2);
 					}
 				}
 			}
+			std::cout <<(int) chrom <<  std::endl;
+
 			std::cout <<(int) ChIP.size()<<  std::endl;
 			std::cout <<Ntad<<  std::endl;
 
@@ -189,15 +191,27 @@ void MCReplicPoly::Init(int Ninit,int chrom, int chrom_pos[3])
 		std::discrete_distribution<> d(ChIP.begin(), ChIP.end());
 
 		std::ofstream outfile_car(outputDir+"/car.res", std::ios_base::app | std::ios_base::out);
+		
+		//If I saturate the CARs all CARs are boundaries
+		int nonzerobin=0;
+		for (int i=0 ; i < (int) ChIP.size();++i)
+			if(ChIP.at(i)!=0)
+				++nonzerobin;
+		int chromosome_n_barries = int(n_barriers*Ntad/1531)*Ntad;
+		if(chromosome_n_barries>nonzerobin)
+		{
+			std::cout << "Saturated_CARS" <<std::endl;
 
+			chromosome_n_barries=nonzerobin;
+		}
+			
+			
 		active_cars={};
-		while((int) active_cars.size() < int(n_barriers*Ntad/1531) )
+		while((int) active_cars.size() < int(chromosome_n_barries) )
 		{
 			int car=d(gen);
 			if(std::find(active_cars.begin(),active_cars.end(),car) == active_cars.end())
 			   active_cars.push_back(car);
-
-			
 		}
 
 		
@@ -206,11 +220,11 @@ void MCReplicPoly::Init(int Ninit,int chrom, int chrom_pos[3])
 			tadConf[active_cars[i]].isCAR=true;
 		
 		
-		std::cout << "Extruder before " << N_extruders <<std::endl;
+		//std::cout << "Extruder before " << N_extruders <<std::endl;
 		
-		individual_N_extruders= int(N_extruders*active_cars.size()*Ntad/1531);
+		//individual_N_extruders= int(N_extruders*Ntad);
 		
-		std::cout << "Extruder after " << individual_N_extruders <<std::endl;
+		//std::cout << "Extruder after " << individual_N_extruders <<std::endl;
 
 	}
 	loaded_mcms={};
@@ -1357,12 +1371,30 @@ void MCReplicPoly::Move_Extruders()
 		//no nead to change active_extruders that contain only left legs
 
 	}
+	
+	//At the end I verify if I am stacking loops
+	//Reload updated anchors of extruders
+	LeftAnchor = active_extruders.at(t);
+	RightAnchor = active_extruders.at(t)->binding_site;
+	//my two unchors are followed by other anchors of bigger loop
+	if(LeftAnchor->neighbors[1]->isCohesin and RightAnchor->neighbors[1]->isCohesin)
+	{
+		RightAnchor = RightAnchor->neighbors[1];
+		LeftAnchor = LeftAnchor->neighbors[0];
+		//delete info of old extruder
+		LeftAnchor->neighbors[1]->isCohesin=false;
+		LeftAnchor->neighbors[1]->binding_site=nullptr;
+		RightAnchor->neighbors[0]->isCohesin=false;
+		RightAnchor->neighbors[0]->binding_site=nullptr;
+		active_extruders.erase(std::remove_if(active_extruders.begin(), active_extruders.end(), [](const MCTad* tad){return !tad->isCohesin;}), active_extruders.end());
+		
+		//load a new left anchor in the the active_extruder vector (it will be a duplicate od the existing bigger loop)
+		active_extruders.push_back(LeftAnchor);
+
 		
 
-	
-	
-	
-	
+		
+	}
 }
 
 /*

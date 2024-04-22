@@ -124,6 +124,7 @@ void MCHeteroPoly::AcceptMove()
 
 		for ( int v = 0; v < 13; ++v )
 		{
+
 			int vi1 = (v == 0) ? tadUpdater->vo : lat->bitTable[v][tadUpdater->vo];
 			int vi2 = (v == 0) ? tadUpdater->vn : lat->bitTable[v][tadUpdater->vn];
 			
@@ -135,6 +136,7 @@ void MCHeteroPoly::AcceptMove()
 	
 	if ( tadTrial->domain != -1 )
 	{
+
 		for ( int v = 0; v < 13; ++v )
 		{
 
@@ -152,6 +154,8 @@ double MCHeteroPoly::GetEffectiveEnergy() const
 	
 	if ( Jaa > 0. or Jbb > 0. or Jtad_b > 0. or Jtad_a > 0. or J_insulator_cis>0 or J_insulator_trans>0)
 	{
+		std::cout << " energy 1 "<< std::endl;
+
 		double domain_energy=0;
 		double inter_domain_energy=0;
 		double tads_energy=0;

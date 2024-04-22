@@ -606,8 +606,8 @@ void MCPoly::TrialMove(double* dE)
 	
 	if(tadTrial->isCentromere)
 	{
-		//int centromere_radius=int(L/2*3/10);
-
+		double centromere_radius=double(L/2*3/10);
+		
 		double J_centromere1=0.0;
 		double J_centromere2=0.0;
 		std::vector<double>center={L/2, L/2, L};
@@ -622,16 +622,20 @@ void MCPoly::TrialMove(double* dE)
 			double distance1=lat->xyzTable[dir][tadUpdater->vn]-center[dir];
 			new_dist=new_dist+SQR(distance1);
 		}
-		//double thr_distance =  SQR(centromere_radius/sqrt(2)) ;
+		old_dist=sqrt(old_dist)-centromere_radius;
+		new_dist=sqrt(new_dist)-centromere_radius;
+		//double thr_distance =  0.5 ;
 		
 		//J_centromere1= old_dist<=thr_distance ? 1 : old_dist/SQR(centromere_radius/sqrt(2));
 		//J_centromere2= new_dist<=thr_distance ? 1 : new_dist/SQR(centromere_radius/sqrt(2));
 		
-		J_centromere1= old_dist;
-		J_centromere2= new_dist;
-		
-		*dE-=10*(J_centromere1-J_centromere2);
+		J_centromere1= SQR(old_dist);
+		J_centromere2= SQR(new_dist);
+		if((J_centromere2)<=0.5 and (J_centromere1)<=0.5)//the spring can fluctuate for 1NN
+			J_centromere1=  J_centromere2;
+		*dE-=100*(J_centromere1-J_centromere2);
 	}
+
 	
 	if((tadTrial->isLeftEnd() or tadTrial->isRightEnd()) and !tadTrial->isrDNA)
 	{

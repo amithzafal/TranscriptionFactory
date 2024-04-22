@@ -23,7 +23,7 @@ class MonomerDmap():
 	def __init__(self, outputDir, initFrame):
 		self.readers=[]
 		self.N_chain=[]
-		for i in range(0,16):
+		for i in range(0,17):
 			self.readers.append(vtkReader(outputDir, i,initFrame,readLiq=False, readPoly=True))
 			self.N_chain.append(np.sum([(self.readers[i].status==-1)+(self.readers[i].status==0)]))
 		self.contactFile = os.path.join(outputDir,"r_"+str(r)+"_"+str(initFrame)+ "_"+str(interval)+"full_genome.cool")

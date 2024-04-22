@@ -14,16 +14,16 @@ for folder in os.listdir(outputDir)[:]:
 	current_mrt=[]
 	print(folder)
 	if(folder.endswith('cool')==False and folder.endswith('.gz')==False and folder.endswith('.res')==False):
-		for chrom_n in range(1,17):
+		for chrom_n in range(1,18):
 			if(np.sum(np.array(os.listdir(outputDir+'/'+folder))=="chrom_"+str(chrom_n-1)+"_timing.res")):
 				if 0==0:
 					file_path = outputDir+'/'+folder+"/chrom_"+str(chrom_n-1)+"_timing.res"
 					if  os.path.getsize(file_path) != 0:
 						current_mrt.extend(list(np.loadtxt(file_path)[:]))
-						break
-		mrt.append(current_mrt)
+		if(len(current_mrt)==12063):						
+			mrt.append(current_mrt)
 				
-print(mrt)                
+print(np.shape(np.array(mrt)))                
 nsim=len(mrt)
 n=6
 dp = np.array(np.arange(0, 1+1/(2*n), 1/n)*100, dtype=int)

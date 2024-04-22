@@ -21,7 +21,7 @@ MCBond::MCBond()
 MCTad::MCTad(): bonds(), neighbors()
 {
 	pos = -1;
-	type = 0;
+	type = -1;
 	domain = -1;
 	insulator_type = {};
 	links = 0;

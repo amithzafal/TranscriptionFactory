@@ -103,6 +103,8 @@ void MCSim<lattice, polymer>::Init()
 		indexes.push_back( i );
 	std::shuffle (indexes.begin(), indexes.end(), lat->rngEngine);
 	
+	
+	
 	for ( int i = 0; i < (int) pol_yeast.size()  ; ++i )
 	{
 
@@ -116,12 +118,34 @@ void MCSim<lattice, polymer>::Init()
 	}
 	
 
-
+	if(n_barriers>0)
+	{
+	 //Init and density of loops for different chromosomes
+	 
+		 int Genome_size=0;
+		 std::vector<int> chromsizes={};
+		 for ( int i = 0; i < (int) pol_yeast.size()  ; ++i )
+		 {
+			 Genome_size=Genome_size+pol_yeast.at(i)->Ntad;
+			 chromsizes.push_back(pol_yeast.at(i)->Ntad);
+		 }
 		
+		 std::random_device rd;
+		 std::mt19937 gen(rd());
+		 std::discrete_distribution<> d(chromsizes.begin(), chromsizes.end());
+		
+		
+		 for(int n=0; n<int(N_extruders*Genome_size); ++n)
+		 {
+			 int chrom=d(gen);
+			 ++static_cast<MCReplicPoly*>(pol_yeast.at(chrom))->individual_N_extruders;
+		 }
+		
+		for ( int i = 0; i < (int) pol_yeast.size()  ; ++i )
+			std::cout <<static_cast<MCReplicPoly*>(pol_yeast.at(i))->individual_N_extruders << std::endl;
+	 }
+
 	
-
-
-
 
 	NliqMoves = (latticeType == "MCLattice") ? 0 : NliqMC * static_cast<MCLiqLattice*>(lat)->nLiq;
 	
@@ -211,6 +235,8 @@ void MCSim<lattice, polymer>::InitSimRange()
 			std::cout << "Could not locate required configuration files in directory " << outputDir << " - starting fresh" << std::endl;
 	}
 	
+	
+	
 	Ninit = (latticeType == "MCLattice") ? polyId : std::min(polyId, liqId);
 	Nfinal = Nrelax + Nmeas;
 	
@@ -222,7 +248,7 @@ template<class lattice, class polymer>
 void MCSim<lattice, polymer>::Run(int frame)
 {
 	
-	if(polyType=="MCReplicPoly")
+	/*if(polyType=="MCReplicPoly")
 	{
 		bool fullyRepl=true;
 		for ( int i = 0; i < (int) pol_yeast.size()  ; ++i )
@@ -230,7 +256,7 @@ void MCSim<lattice, polymer>::Run(int frame)
 				fullyRepl=false;
 		if(fullyRepl)
 			throw std::runtime_error("finshed repli");
-	}
+	}*/
 		
 		
 
@@ -259,7 +285,8 @@ void MCSim<lattice, polymer>::Run(int frame)
 		NbindedCohesin_loops = NbindedCohesin_loops+((polyType == "MCReplicPoly") ?  (int) static_cast<MCReplicPoly*>(pol_yeast.at(i))->active_extruders.size() : 0);
 	}
 		
-	
+	//std::cout << cycle << std::endl;
+
 
 	//two different enhancement according to the topology
 	
@@ -298,79 +325,82 @@ void MCSim<lattice, polymer>::Run(int frame)
 		
 		
 	}
-
-	if ( frame >= Nrelax + NG1 )
+	if(polyType=="MCReplicPoly")
 	{
-		if ( latticeType == "MCLattice" )
+		if ( frame >= Nrelax + NG1 )
 		{
-			
-			active_forks=0;
-			std::vector<MCTad*> activeOrigins;
-			std::vector<int> respective_chain;
-
-
-			for ( int i = 0; i < (int) pol_yeast.size()  ; ++i )
+			if ( latticeType == "MCLattice" )
 			{
-				active_forks = active_forks + ((polyType == "MCReplicPoly") ?  (int) static_cast<MCReplicPoly*>(pol_yeast.at(i))->activeForks.size() : 0);
-				auto origins =static_cast<MCReplicPoly*>(pol_yeast.at(i))->activeOrigins;
-				for ( int j = 0; j < (int) origins.size() ; ++j )
-				{
-					activeOrigins.push_back(origins.at(j));
-					respective_chain.push_back(i);
-				}
-			}
-
-			if ( (int) activeOrigins.size() > 0 )
-			{
-
-				//auto originsCopy =activeOrigins;
-				//auto respective_chainCopy =respective_chain;
-
-				/*auto shuffle_seed=lat->rngEngine;
-				std::shuffle (originsCopy.begin(), originsCopy.end(),shuffle_seed);
-				std::shuffle (respective_chainCopy.begin(), respective_chainCopy.end(),shuffle_seed);
-				*/
 				
-				for ( int i=0 ; i < (int)activeOrigins.size(); i++) //for every element in indexes
-				{
-					
-					MCTad* origin = activeOrigins[i]; //select origin taf
-					double rndReplic = lat->rngDistrib(lat->rngEngine);
-					
-					int Nocc = active_forks % 2 == 0 ? int(active_forks) : int(active_forks)+ 1;
-					// -1 since origin firing implicate 2 new monomer in the system
-					if ( rndReplic < exp(-double(cycle)/(5*60/0.0003)) * double(2*Ndf- Nocc) * originRate and origin->status==0)
-					{
-						auto chrom=respective_chain.at(i);
-						//std::cout << "assign chrom" <<  chrom << std::endl;
-						
-						
-						static_cast<MCReplicPoly*>(pol_yeast.at(chrom))->Replicate(origin);
-						//std::cout << "end repli" << std::endl;
+				active_forks=0;
+				std::vector<MCTad*> activeOrigins;
+				std::vector<int> respective_chain;
 
-						
-						active_forks=0;
-						for ( int k = 0; k < (int) pol_yeast.size()  ; ++k )
-							active_forks = active_forks + ((polyType == "MCReplicPoly") ?  (int) static_cast<MCReplicPoly*>(pol_yeast.at(k))->activeForks.size() : 0);
-						
+
+				for ( int i = 0; i < (int) pol_yeast.size()  ; ++i )
+				{
+					active_forks = active_forks + ((polyType == "MCReplicPoly") ?  (int) static_cast<MCReplicPoly*>(pol_yeast.at(i))->activeForks.size() : 0);
+					auto origins =static_cast<MCReplicPoly*>(pol_yeast.at(i))->activeOrigins;
+					for ( int j = 0; j < (int) origins.size() ; ++j )
+					{
+						activeOrigins.push_back(origins.at(j));
+						respective_chain.push_back(i);
 					}
 				}
 
-				
-			}
-			auto shuffled_pol_yeast =pol_yeast;
-			std::shuffle (shuffled_pol_yeast.begin(), shuffled_pol_yeast.end(), lat->rngEngine);
+				if ( (int) activeOrigins.size() > 0 )
+				{
 
-			for ( int i = 0; i < (int) shuffled_pol_yeast.size()  ; ++i )
-					UpdateRepl(static_cast<MCLattice*>(lat), shuffled_pol_yeast.at(i));
-		}
-		else
-		{
-			auto shuffled_pol_yeast =pol_yeast;
-			std::shuffle (shuffled_pol_yeast.begin(), shuffled_pol_yeast.end(), lat->rngEngine);
-			
-			for ( int i = 0; i < (int) shuffled_pol_yeast.size()  ; ++i )
-				UpdateRepl(static_cast<MCLiqLattice*>(lat), shuffled_pol_yeast.at(i));
+					//auto originsCopy =activeOrigins;
+					//auto respective_chainCopy =respective_chain;
+
+					/*auto shuffle_seed=lat->rngEngine;
+					std::shuffle (originsCopy.begin(), originsCopy.end(),shuffle_seed);
+					std::shuffle (respective_chainCopy.begin(), respective_chainCopy.end(),shuffle_seed);
+					*/
+					
+					for ( int i=0 ; i < (int)activeOrigins.size(); i++) //for every element in indexes
+					{
+						
+						MCTad* origin = activeOrigins[i]; //select origin taf
+						double rndReplic = lat->rngDistrib(lat->rngEngine);
+						
+						int Nocc = active_forks % 2 == 0 ? int(active_forks) : int(active_forks)+ 1;
+						// -1 since origin firing implicate 2 new monomer in the system exp(-double(cycle)/(5*60/0.0003))
+						
+						if ( rndReplic < double(2*(Ndf*(1.0-exp(-double(cycle-Nrelax*Ninter)/(5*60/0.0003))))- Nocc) * originRate and origin->status==0)
+						{
+							auto chrom=respective_chain.at(i);
+							//std::cout << "assign chrom" <<  chrom << std::endl;
+							
+							
+							static_cast<MCReplicPoly*>(pol_yeast.at(chrom))->Replicate(origin);
+							std::cout << "endrepli" <<  chrom << std::endl;
+
+							
+							active_forks=0;
+							for ( int k = 0; k < (int) pol_yeast.size()  ; ++k )
+								active_forks = active_forks + ((polyType == "MCReplicPoly") ?  (int) static_cast<MCReplicPoly*>(pol_yeast.at(k))->activeForks.size() : 0);
+							
+						}
+					}
+
+					
+				}
+				auto shuffled_pol_yeast =pol_yeast;
+				std::shuffle (shuffled_pol_yeast.begin(), shuffled_pol_yeast.end(), lat->rngEngine);
+
+				for ( int i = 0; i < (int) shuffled_pol_yeast.size()  ; ++i )
+						UpdateRepl(static_cast<MCLattice*>(lat), shuffled_pol_yeast.at(i));
+			}
+			else
+			{
+				auto shuffled_pol_yeast =pol_yeast;
+				std::shuffle (shuffled_pol_yeast.begin(), shuffled_pol_yeast.end(), lat->rngEngine);
+				
+				for ( int i = 0; i < (int) shuffled_pol_yeast.size()  ; ++i )
+					UpdateRepl(static_cast<MCLiqLattice*>(lat), shuffled_pol_yeast.at(i));
+			}
 		}
 	}
 	++cycle;

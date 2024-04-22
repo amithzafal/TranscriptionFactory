@@ -22,7 +22,7 @@ from scipy.spatial.distance import pdist, squareform
 class MonomerDmap():
 	def __init__(self, outputDir, initFrame):
 		self.readers=[]
-		for i in range(0,16):
+		for i in range(0,17):
 			self.readers.append(vtkReader(outputDir, i,initFrame,readLiq=False, readPoly=True))
 		self.contactFile = os.path.join(outputDir,"r_"+str(r)+"_"+str(initFrame)+ "_"+str(interval)+"full_genome.cool")
 

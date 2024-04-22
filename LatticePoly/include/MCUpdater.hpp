@@ -260,7 +260,7 @@ struct UpdateReplImpl<MCLattice, MCReplicPoly>
 				if(pol->individual_N_extruders!=0)
 				{
 					pol->unLoadExtruders();
-					int extruders_moves = pol->individual_N_extruders- (pol->individual_N_extruders-1)- pol->active_extruders.size();
+					int extruders_moves = pol->individual_N_extruders- pol->active_extruders.size();
 					for (int i=0 ; i < extruders_moves ; ++i)
 					{
 						pol->LoadExtruders();

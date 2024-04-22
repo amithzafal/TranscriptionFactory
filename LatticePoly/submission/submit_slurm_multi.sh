@@ -15,10 +15,10 @@ WTIME=8-00:00:00
 QUEUE="Lake"
 
 # Max. memory per task
-MAXMEM="5G"
+MAXMEM="10G"
 
 # Associated scratch directory
-SCRATCHDIR=/home
+SCRATCHDIR=/Xnfs/abc/nf_scratch/
 
 # Script (relative) path
 SCRIPTDIR=$(dirname "$0")
@@ -43,4 +43,3 @@ if [ "$#" -eq "2" ]; then
 else
 	echo -e "\033[1;31mUsage is $0 jobName numJob\033[0m"
 fi
-
