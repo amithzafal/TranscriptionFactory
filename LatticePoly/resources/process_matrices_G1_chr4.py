@@ -133,7 +133,7 @@ for e in range(len(matric_names)):
 	#clr = cooler.Cooler('./LatticePoly/LatticePoly/data/GSM4585143_23C-15min.mcool::/resolutions/3200')
 	#clr = cooler.Cooler('./GSM4585143_23C-15min.mcool::/resolutions/200')
 	#create a series with the chromosome of interest
-	ser={"SC1":len(rawdata)*binsize}
+	ser={"chrIV":len(rawdata)*binsize}
 	chromsizes=pd.Series(ser)
 	chromsizes=chromsizes.astype('int64')
 
@@ -149,8 +149,8 @@ for e in range(len(matric_names)):
 	#bins["ICE"]=weight_ice*1/(avtime*traj)**0.5
 	#add copy weights
 	pixels = ArrayLoader(bins, mymatrix, chunksize=10000000)
-	bins_dict[matric_names[e][:-9]]=bins
-	pixels_dict[matric_names[e][:-9]]=pixels
+	bins_dict[matric_names[e][:-5]]=bins
+	pixels_dict[matric_names[e][:-5]]=pixels
 	#create cooler file
 #print(bins_dict)
 cooler.create_scool(outputDir+"/"+final_name+".scool",bins_dict,pixels_dict)

@@ -25,9 +25,9 @@ class MonomerDmap():
 		self.contactFile = os.path.join(self.reader.outputDir,"r_"+str(r)+"_"+str(initFrame)+ "_hic.cool")
 		self.copyFile = os.path.join(self.reader.outputDir,"copy_r_"+str(r)+ "_"+str(initFrame)+"_hic.res")
 
-		#if os.path.exists(self.contactFile):
-		#	print("Files %s' already exist - aborting" % (self.contactFile))
-		#	sys.exit()
+		if os.path.exists(self.contactFile):
+			print("Files %s' already exist - aborting" % (self.contactFile))
+			sys.exit()
 		self.Nchain=0
 		for t in range(self.reader.nTad):
 			if(self.reader.status[t]==-1 or self.reader.status[t]==0):
@@ -96,7 +96,7 @@ class MonomerDmap():
 		
 	def Print(self):
 		np.savetxt(self.copyFile, self.copy_weight )
-		ser={"chrIV":1531000}
+		ser={"chrIV":1000*len(self.contactProb)}
 		chromsizes=pd.Series(ser)
 		chromsizes=chromsizes.astype('int64')	
 		bins = cooler.binnify(chromsizes, 1000)

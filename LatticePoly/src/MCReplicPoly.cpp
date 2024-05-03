@@ -713,6 +713,13 @@ void MCReplicPoly::Update()
 			if(tadConf.at(tad->SisterID).isCentromere)
 				tad->isCentromere=true;
 			
+			if(tad->status!=0)
+			{
+				tadConf.at(tad->SisterID).type=1;
+				tad->type=1;
+			}
+			
+			
 			if ( tad->type == 1 )
 			{
 				for ( int v = 0; v < 13; ++v )

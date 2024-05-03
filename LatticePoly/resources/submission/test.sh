@@ -17,6 +17,44 @@ ROOTDIR=${SCRIPTDIR}/../..
 
 # Set working directory to root
 
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${CURRENTDIR}  500 4 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${CURRENTDIR}  600 4 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${CURRENTDIR}  700 4 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${CURRENTDIR}  900 4 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${CURRENTDIR}  500 2 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${CURRENTDIR}  600 2 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${CURRENTDIR}  700 2 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${CURRENTDIR}  900 2 100
+
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  550 3 50
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  550 4 50
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  550 3 350
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  550 4 350
+
+python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Fork_pos_full_genome.py ${CURRENTDIR} 700 50
+python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/all_mon_pos_full_genome.py ${CURRENTDIR} 700 50
+
+python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Fork_pos_full_genome.py ${CURRENTDIR} 800 50
+python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/all_mon_pos_full_genome.py ${CURRENTDIR} 800 50
+
+python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Fork_pos_full_genome.py ${CURRENTDIR} 900 50
+python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/all_mon_pos_full_genome.py ${CURRENTDIR} 900 50
+
+#python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR} 700 50
+
+#python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR} 950 3 50
+#python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR} 950 4 50
+#python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR} 950 5 50
+
+#python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR} 950 9 50
+#python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR} 950 10 50
+#python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR} 950 12 50
+#python3  /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR}   750 3 50
+#python3 /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR}   850 3 50
+#python3  /home/ddasaro//Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py ${CURRENTDIR}   950 3 50
+
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${CURRENTDIR}   550 4
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${CURRENTDIR}   550 6
 
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py  ${CURRENTDIR}  500 1 100
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py  ${CURRENTDIR}  600 1 100
@@ -26,13 +64,12 @@ ROOTDIR=${SCRIPTDIR}/../..
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py  ${CURRENTDIR}  1300 1 100
 
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/theta_arm.py ${CURRENTDIR} 500 100
-#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 950 4 100
-#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 650 4 100
-#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 650 3 100
-#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 650 8 100
-#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 1250 4 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 550 2 450
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 550 3 450
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 550 4 450
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Cluster_full_genome.py  ${CURRENTDIR} 550 5 450
 
-python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  200 2 100
+#python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  200 2 100
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  400 3 100
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  2000 3 300
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${CURRENTDIR}  2000 1 300
@@ -59,6 +96,6 @@ python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/Monome
 #python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSDchromatid_pairs_internal_2chains.py ${CURRENTDIR} 5001
 #python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl_2chain.py ${CURRENTDIR} 5001 0
 #python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl_2chain.py ${CURRENTDIR} 5001 1
-python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl_rc2c.py  ${CURRENTDIR} 50001
+#python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl_rc2c.py  ${CURRENTDIR} 50001
 #python /home/ddasaro/LatticePoly/LatticePoly/resources/Poly_Rcmdiff_SCs_afterRepl.py ${CURRENTDIR} 5001
 #python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl_1000.py ${CURRENTDIR} 5001

@@ -38,12 +38,12 @@ name = sys.argv[2]
 def merge_matrices(outputDir,name):
         matrices=[]
         time=0
-        for folder in os.listdir(outputDir)[:]:
-                if(folder.endswith('cool')==False and folder.endswith('.cool')==False and folder.endswith('.gz')==False and folder.endswith('.res')==False):
+        for folder in os.listdir(outputDir)[:300]:
+                if(folder.endswith('cool')==False and folder.startswith('.')==False and folder.endswith('.gz')==False and folder.endswith('.res')==False):
                         check=0
                         if((np.array(os.listdir(outputDir+'/'+folder))==name).any()):
                                 if(0==0):
-                                        print("found file name = "+name)
+                                        print("found file name = "+name+"in "+folder)
                                         file_path = os.path.join(outputDir+'/'+folder, name)
                                         clr=cooler.Cooler(file_path)
                                         matr= (np.array(clr.matrix(balance=False)[:]))

@@ -55,9 +55,9 @@ sed -e "${DIRSUB}" < /home/ddasaro/LatticePoly/LatticePoly/resources/submission/
 
 
 
-python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl_pairs.py ${TMPDIR} 50001
-python /home/ddasaro/LatticePoly/LatticePoly/resources/Poly_Rcmdiff_SCs_afterRepl.py ${TMPDIR} 50001
-python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl.py ${TMPDIR} 50001
+#python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl_pairs.py ${TMPDIR} 50001
+#python /home/ddasaro/LatticePoly/LatticePoly/resources/Poly_Rcmdiff_SCs_afterRepl.py ${TMPDIR} 50001
+#python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl.py ${TMPDIR} 50001
 
 
 
@@ -70,11 +70,21 @@ python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl.py ${T
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 1300 1 100 
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 1300 2 100 
 
-#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 1700 1 100 
-#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 1700 2 100 
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 1700 1 100
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 1700 2 100
 
-#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 700 1 100 
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 700 1 100
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_S_cool.py ${TMPDIR} 700 2 100
+
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50000 2
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50050 2
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50150 2
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50250 2
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50350 2
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50450 2
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50550 2
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50650 2
+python /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_2SC_after_repl_cooler.py ${TMPDIR} 50750 2
 
 
 
@@ -83,10 +93,15 @@ python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl.py ${T
 
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/Forksnumber.py ${TMPDIR} 500
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/PolyMSDchromatid1.py  ${TMPDIR}  5010
-#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   5010 2
-#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   5010 3 
-#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   5010 1 
-
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 1
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 2 
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 5 
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 7
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 10
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 3
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 4
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 6
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py ${TMPDIR}   550 5
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_cis_cool.py ${TMPDIR}   500 2 chrIV
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_cis_cool.py ${TMPDIR}   500 4 chrIV
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_trans_cool.py ${TMPDIR}  500 2 chrIV
@@ -99,6 +114,12 @@ python /home/ddasaro/LatticePoly/LatticePoly/resources/PolyMSD_after_repl.py ${T
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_all_cool.py ${TMPDIR}   500 5 chrIV
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_all_cool.py ${TMPDIR}   500 3 chrIV
 #python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_all_cool.py ${TMPDIR}   500 4 chrIV
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_cis_cool.py ${TMPDIR}   500 6 chrIV
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_trans_cool.py ${TMPDIR}  500 6 chrIV
+#python3 /home/ddasaro//LatticePoly/LatticePoly/resources/MonomerDist_HiC_M_all_cool.py ${TMPDIR}   500 6 chrIV
+
+
+
 # Move SLURM output files to data directory
 mv ${SLURM_SUBMIT_DIR}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out ${TMPDIR}
 mv ${SLURM_SUBMIT_DIR}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.err ${TMPDIR}
@@ -107,7 +128,7 @@ mv ${SLURM_SUBMIT_DIR}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.err ${TMPDIR
 #[ ! -d "${DATDIR}" ] && mkdir -p ${DATDIR}
 
 # Archive output files to home directory
-tar --transform "s|^|${OUTDIR}/|" -czf /Xnfs/physbiochrom/ddasaro/year3/March24/segregation_25/${OUTDIR}.tar.gz -C ${TMPDIR} .
+tar --transform "s|^|${OUTDIR}/|" -czf /Xnfs/physbiochrom/ddasaro/year3/April24/cohesion/${OUTDIR}.tar.gz -C ${TMPDIR} .
 #tar -xzf ${DATDIR}/${OUTDIR}.tar.gz -C /Xnfs/lbmcdb/Jost_team/ddasaro/year2/April23/Ring/100
 #rm -rf {DATDIR}/${OUTDIR}.tar.gz
 

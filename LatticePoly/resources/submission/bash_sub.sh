@@ -56,7 +56,7 @@ ROOTDIR=${SCRIPTDIR}/../..
 # python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py /home/ddasaro/LatticeData/G1_800nm/ r_2.0_0_100full_genome.cool
 # python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py /home/ddasaro/LatticeData/G1_800nm/ r_2.0_100_100full_genome.cool
  
-python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py /home/ddasaro/LatticeData/G1_800nm/ r_2.0_200_100full_genome.cool
+#python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py /home/ddasaro/LatticeData/G1_800nm/ r_2.0_200_100full_genome.cool
 # python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py /home/ddasaro/LatticeData/G1_800nm/ r_2.0_300_100full_genome.cool
  #python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py /home/ddasaro/LatticeData/G1_800nm/ r_2.0_500_100full_genome.cool
 
@@ -67,6 +67,8 @@ python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py
  #python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py /home/ddasaro/LatticeData/G1_800nm/ r_4.0_500_100full_genome.cool
  #python /home/ddasaro/LatticePoly/LatticePoly/resources/process_matrices_yeast.py /home/ddasaro/LatticeData/G1_800nm/ r_1.0_500_100full_genome.cool
 
+/home/ddasaro/LatticePoly/LatticePoly/resources/process.sh /home/ddasaro/LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py /Xnfs/abc/nf_scratch/ddasaro/LatticeData/N_150_d_0.06/ 550 5
+/home/ddasaro/LatticePoly/LatticePoly/resources/process.sh /home/ddasaro/LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py /Xnfs/abc/nf_scratch/ddasaro/LatticeData/N_150_d_0.06/ 550 6
 
-
-
+/home/ddasaro/LatticePoly/LatticePoly/resources/process.sh /home/ddasaro/LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py /Xnfs/abc/nf_scratch/ddasaro/LatticeData/N_70_d_0.06/ 550 5
+/home/ddasaro/LatticePoly/LatticePoly/resources/process.sh /home/ddasaro/LatticePoly/LatticePoly/resources/MonomerDist_HiC_G1_chr4.py /Xnfs/abc/nf_scratch/ddasaro/LatticeData/N_70_d_0.06/ 550 6

@@ -52,7 +52,7 @@ def merge_matrices(outputDir,name):
 							clr=cooler.Cooler(file_path)
 							matr= (np.array(clr.matrix(balance=False)[:]))
 							print(len(matr))
-							if(len(matr)==1000):
+							if(len(matr)>0):
 								matrices.append(matr)
 								time+=(matr[0][1])
 								check=1
@@ -139,7 +139,7 @@ for e in range(len(matric_names)):
 	#clr = cooler.Cooler('./LatticePoly/LatticePoly/data/GSM4585143_23C-15min.mcool::/resolutions/3200')
 	#clr = cooler.Cooler('./GSM4585143_23C-15min.mcool::/resolutions/200')
 	#create a series with the chromosome of interest
-	ser={"chrom":1000000}
+	ser={"chrIV":1531*1000}
 	chromsizes=pd.Series(ser)
 	chromsizes=chromsizes.astype('int64')
 
@@ -151,7 +151,7 @@ for e in range(len(matric_names)):
 	#add  weights
 	bins["raw"]=1
 	#bins["copyweight"]=1/(avcopyweight*(avtime*traj)**0.5)
-	bins["weight"]=1/(avtime*traj)**0.5
+	#bins["weight"]=1/(avtime*traj)**0.5
 	#bins["ICE"]=weight_ice*1/(avtime*traj)**0.5
 	#add copy weights
 	pixels = ArrayLoader(bins, mymatrix, chunksize=10000000)
