@@ -31,6 +31,8 @@ public:
 	int bitTable[13][Ntot];
 	int spinTable[Ntot];
 	int nLiq;
+	int ReplTable[3][Ntot];
+
 
 
 		

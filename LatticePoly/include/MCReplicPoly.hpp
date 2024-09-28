@@ -71,7 +71,7 @@ protected:
 
 	void ReplicateTADs(MCTad*);
 	void ReplicateBonds(MCTad*);
-	int ReplTable[3][Ntot];
+	//int ReplTable[3][Ntot];
 	void UpdateReplTable(MCTad*);
 
 

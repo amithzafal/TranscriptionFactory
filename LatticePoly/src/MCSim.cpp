@@ -261,7 +261,14 @@ void MCSim<lattice, polymer>::Run(int frame)
 		
 
 
-		
+	if ( (cycle == (unsigned long long) (150+Nrelax)*Ninter) && (polyType != "MCPoly") &&(0==1))
+	{
+		std::cout << "*****STOP REPLI******" << std::endl;
+		replicRate=0;
+		originRate=0;
+		Ndf=0;
+	}
+
 
 	/*if ( (cycle == (unsigned long long) Nrelax*Ninter) && (polyType != "MCPoly") )
 		for ( int i = 0; i < (int) pol_yeast.size()  ; ++i )

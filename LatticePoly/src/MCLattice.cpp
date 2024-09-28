@@ -169,6 +169,8 @@ void MCLattice::Init(int)
 		}
 		
 	}
+	for ( int vi = 0; vi < Ntot; ++vi )
+		ReplTable[0][vi] = 0;
 	/*for ( int vi = 0; vi < Ntot; ++vi )
 		if(bitTable[0][vi] == 0)
 			++phi;

@@ -36,8 +36,8 @@ void MCReplicPoly::Init(int Ninit,int chrom, int chrom_pos[3])
 
 	}
 	
-	for ( int vi = 0; vi < Ntot; ++vi )
-		ReplTable[0][vi] = 0;
+	//for ( int vi = 0; vi < Ntot; ++vi )
+	//	ReplTable[0][vi] = 0;
 
 
 	
@@ -197,7 +197,9 @@ void MCReplicPoly::Init(int Ninit,int chrom, int chrom_pos[3])
 		for (int i=0 ; i < (int) ChIP.size();++i)
 			if(ChIP.at(i)!=0)
 				++nonzerobin;
-		int chromosome_n_barries = int(n_barriers*Ntad/1531)*Ntad;
+		int chromosome_n_barries = int(n_barriers*Ntad/1531);
+		std::cout <<"n_barriers"<< chromosome_n_barries <<std::endl;
+
 		if(chromosome_n_barries>nonzerobin)
 		{
 			std::cout << "Saturated_CARS" <<std::endl;
@@ -899,7 +901,7 @@ double MCReplicPoly::GetEffectiveEnergy() //chiedere Maxime
 		double Etot = 0.;
 
 		if ( Jf > 0.  )
-			Etot=Etot+Jf*(ReplTable[0][tadUpdater->vo]-ReplTable[0][tadUpdater->vn]);
+			Etot=Etot+Jf*(lat->ReplTable[0][tadUpdater->vo]-lat->ReplTable[0][tadUpdater->vn]);
 
 
 		if ( Jf_sister > 0.  and tadTrial->binding_site->isFork())
@@ -1037,7 +1039,8 @@ double MCReplicPoly::GetEffectiveEnergy() //chiedere Maxime
 
 void MCReplicPoly::TurnCohesive(MCTad* tad)
 {
-
+	if(originRate!=0)
+		return;
 
 	
 	if( std::find(cohesive_CARs.begin(),cohesive_CARs.end(),tad) == cohesive_CARs.end())
@@ -1045,7 +1048,7 @@ void MCReplicPoly::TurnCohesive(MCTad* tad)
 
 		double rnd = lat->rngDistrib(lat->rngEngine);
 		int original_total_activated_cars=total_activated_cars;
-		double activation_rate = ForkTableMode==0? keco1 : keco1*ReplTable[0][tad->pos];
+		double activation_rate = ForkTableMode==0? keco1 : keco1*lat->ReplTable[0][tad->pos];
 		if(rnd<activation_rate)
 		{
 			cohesive_CARs.push_back(tad);
@@ -1288,6 +1291,8 @@ void MCReplicPoly::Find_cohesive_CAR()
 
 void MCReplicPoly::LoadExtruders()
 {
+	if(originRate!=0)
+		return;
 	//load with a certain rate, if rnd is greater exit function
 	double rnd = lat->rngDistrib(lat->rngEngine);
 	if(rnd>loading_rate)
@@ -1556,8 +1561,8 @@ void MCReplicPoly::AcceptMove()
 				int vi1 = (lattice_neigh2[v] == 0) ? vo: lat->bitTable[lattice_neigh2[v]][vo];
 				int vi2 = (lattice_neigh2[v] == 0) ? vn: lat->bitTable[lattice_neigh2[v]][vn];
 
-				--ReplTable[0][vi1];
-				++ReplTable[0][vi2];
+				--lat->ReplTable[0][vi1];
+				++lat->ReplTable[0][vi2];
 			}
 		}
 		else
@@ -1567,8 +1572,8 @@ void MCReplicPoly::AcceptMove()
 				int vo =(v == 0) ? tadUpdater->vo: lat->bitTable[v][tadUpdater->vo];
 				int vn =(v == 0) ? tadUpdater->vn: lat->bitTable[v][tadUpdater->vn];
 				
-				--ReplTable[0][vo];
-				++ReplTable[0][vn];
+				--lat->ReplTable[0][vo];
+				++lat->ReplTable[0][vn];
 			}
 		}
 	}
@@ -1591,7 +1596,7 @@ void MCReplicPoly::UpdateReplTable(MCTad* tad)
 				int vo =(lattice_neigh1[v] == 0) ?  tad->pos : lat->bitTable[lattice_neigh1[v]][tad->pos];
 				int vi1 = (lattice_neigh2[v] == 0) ? vo: lat->bitTable[lattice_neigh2[v]][vo];
 
-				--ReplTable[0][vi1];
+				--lat->ReplTable[0][vi1];
 			}
 		}
 		else
@@ -1599,7 +1604,7 @@ void MCReplicPoly::UpdateReplTable(MCTad* tad)
 			for ( int v = 0; v < 13 ; ++v )
 			{
 				int vo =(v == 0) ?  tad->pos : lat->bitTable[v][tad->pos];
-				--ReplTable[0][vo];
+				--lat->ReplTable[0][vo];
 			}
 		}
 	}
@@ -1615,7 +1620,7 @@ void MCReplicPoly::UpdateReplTable(MCTad* tad)
 				int vi1 = (lattice_neigh2[v] == 0) ? vo: lat->bitTable[lattice_neigh2[v]][vo];
 
 				
-				++ReplTable[0][vi1];
+				++lat->ReplTable[0][vi1];
 
 
 			}
@@ -1624,7 +1629,7 @@ void MCReplicPoly::UpdateReplTable(MCTad* tad)
 			for ( int v = 0; v < 13 ; ++v )
 			{
 				int vo =(v == 0) ?  tad->pos : lat->bitTable[v][tad->pos];
-				++ReplTable[0][vo];
+				++lat->ReplTable[0][vo];
 			}
 		}
 	}
