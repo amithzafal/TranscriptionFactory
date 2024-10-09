@@ -14,7 +14,7 @@
 
 
 // Box linear dimension
-#define L 26
+#define L 5
 
 // Custom macros, compile-time constants & typedefs
 #define SQR(x) ((x)*(x))
