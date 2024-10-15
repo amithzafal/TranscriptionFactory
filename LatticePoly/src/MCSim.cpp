@@ -32,6 +32,7 @@ void MCSim<lattice, polymer>::Init()
 {
 	InitRNG();
 	InitSimRange();
+	InitHDF5File();
 
 	lat->Init(Ninit);
 	pol->Init(Ninit);
@@ -65,6 +66,13 @@ void MCSim<lattice, polymer>::InitRNG()
 	fclose(tmp);
 
 	lat->rngEngine.seed(seed);
+}
+
+
+template<class lattice, class polymer>
+void MCSim<lattice, polymer>::InitHDF5File()
+{
+	H5File file(FILE_NAME, H5F_ACC_TRUNC)
 }
 
 template<class lattice, class polymer>
@@ -184,6 +192,14 @@ void MCSim<lattice, polymer>::DumpVTK(int frame)
 	lat->ToVTK(frame);
 	pol->ToVTK(frame);
 }
+
+template<class lattice, class polymer>
+void MCSim<lattice, polymer>::DumpHDF5(int frame)
+{
+	lat->ToHDF5(frame);
+}
+
+
 
 
 template class MCSim<MCLattice, MCPoly>;

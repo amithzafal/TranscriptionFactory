@@ -18,6 +18,7 @@ public:
 	void Init(int);
 
 	void ToVTK(int);
+	void ToHDF5(int);
 	void FromVTK(int);
 
 	void TrialMove(double*);

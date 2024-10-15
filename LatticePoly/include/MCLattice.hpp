@@ -22,6 +22,7 @@ public:
 	
 	void Init(int);
 	void ToVTK(int) {};
+	void ToHDF5(int) {};
 	
 	void BoxToVTK();
 	void BoxFromVTK();

@@ -22,6 +22,7 @@ public:
 	virtual void Init() = 0;
 	virtual void Run(int) = 0;
 	virtual void DumpVTK(int) = 0;
+	virtual void DumpHDF5(int) = 0;
 	virtual void PrintStats() = 0;
 
 	int Ninit;
@@ -39,11 +40,13 @@ public:
 	void Init();
 	void Run(int);
 	void DumpVTK(int);
+	void DumpHDF5(int);
 	void PrintStats();
 	
 private:
 	void InitRNG();
 	void InitSimRange();
+	void InitHDF5File();
 
 	double acceptAveLiq;
 	double acceptAvePoly;
