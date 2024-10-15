@@ -1,8 +1,13 @@
+cmake/
 bin/
 build/
 data/output/*
 include/vtk/
 lib/*.dylib
 lib/cmake/
+lib/lib*
 resources/__pycache__/
 share/
+include/H5*
+lib/pkgconfig/
+include/hdf5*
