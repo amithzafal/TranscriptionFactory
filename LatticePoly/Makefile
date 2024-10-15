@@ -1,3 +1,12 @@
+##
+##  Makefile
+##  LatticePoly
+##
+##  Created by mtortora on 02/01/2022.
+##  Copyright © 2022 ENS Lyon. All rights reserved.
+##
+
+
 # Compiler
 CXX        := g++
 
@@ -11,8 +20,8 @@ CMAKE      := cmake
 TARGET     := lat
 
 # Version
-VSN_MAJ    := 1
-VSN_MIN    := 7
+VSN_MAJ    := 2
+VSN_MIN    := 0
 
 # Directory paths
 SRCDIR     := src
@@ -30,6 +39,7 @@ OBJEXT     := o
 
 # VTK library installation path
 VTKDIR     := $(LIBDIR)/VTK/build
+HDF5DIR    := $(LIBDIR)/hdf5-1.14.5/hdf5/
 
 # Required VTK modules
 MODULES    := CommonComputationalGeometry CommonCore CommonDataModel CommonExecutionModel CommonMath CommonMisc CommonSystem CommonTransforms FiltersCore FiltersGeneral FiltersSources IOCore IOXML IOXMLParser
@@ -38,7 +48,7 @@ VTKMODS    := $(foreach mod,$(MODULES),-DVTK_MODULE_ENABLE_VTK_$(mod)=YES)
 VTKLIBS    := $(foreach mod,$(MODULES),-lvtk$(mod))
 
 # Flags, libraries and includes
-INC        := -I$(INCDIR) -isystem$(INCDIR)/vtk
+INC        := -I$(INCDIR) -isystem$(INCDIR)/vtk -isystem$(INCDIR)/hdf5
 LIB        := -Wl,-rpath,$(CURDIR)/$(LIBDIR) -L$(LIBDIR) $(VTKLIBS) -lvtksys -lvtkzlib -lvtkdoubleconversion -lvtkexpat -lvtkloguru -lvtklz4 -lvtklzma
 FPATHS     := -D__DPATH__=$(CURDIR)/$(DATDIR)
 FEXTRA     := -D__VERSION_MAJOR__=$(VSN_MAJ) -D__VERSION_MINOR__=$(VSN_MIN) -DNDEBUG
@@ -51,6 +61,7 @@ OBJECTS    := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEX
 
 # VTK objects and directories for full clean
 VTKCLEAN   := $(VTKDIR) $(LIBDIR)/cmake $(TARGETDIR)/vtk*
+HDF5CLEAN  := $(HDF5DIR) $(LIBDIR)/cmake $(TARGETDIR)/hdf5*
 
 # Default make
 all: dirs $(TARGET)
@@ -110,16 +121,28 @@ else
 	@$(RM) -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 endif
 
-# Build (minimal) VTK library
+# Setup (minimal) VTK build
+$(VTKDIR)/Makefile:
+	@echo "\033[1;34mBuilding VTK library...\033[0m"
+	@mkdir -p $(VTKDIR)
+	@cd $(VTKDIR) && $(CMAKE) $(CMAKEFLAGS) ..
+	
+# Install VTK headers/dynamic library files
 libvtk: $(VTKDIR)/Makefile
 	@$(MAKE) -C $(VTKDIR) -j4
 	@$(MAKE) -C $(VTKDIR) install
 	@echo "\033[1;34mSuccessfully compiled VTK library\033[0m"
 
-$(VTKDIR)/Makefile:
-	@echo "\033[1;34mBuilding VTK library...\033[0m"
-	@mkdir -p $(VTKDIR)
-	@cd $(VTKDIR) && $(CMAKE) $(CMAKEFLAGS) ..
+$(HDF5DIR)/Makefile:
+	@echo "\033[1;34mBuilding HDF5 library...\033[0m"
+	@mkdir -p $(HDF5DIR)
+	@cd $(HDF5DIR) && $(CMAKE) -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(CURDIR) ..
+	
+# Install VTK headers/dynamic library files
+libhdf5: $(HDF5DIR)/Makefile
+	@$(MAKE) -C $(HDF5DIR) -j4
+	@$(MAKE) -C $(HDF5DIR) install
+	@echo "\033[1;34mSuccessfully compiled HDF5 library\033[0m"
 
 # Non-file targets
-.PHONY: all dirs run clean cleanlib cleaner libvtk
+.PHONY: all dirs run clean cleanlib cleaner libvtk libhdf5
