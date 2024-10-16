@@ -17,8 +17,8 @@ class MCLiqLattice: public MCLattice
 public:
 	void Init(int);
 
-	void ToVTK(int);
 	void ToHDF5(int);
+	void ToVTK(int);
 	void FromVTK(int);
 
 	void TrialMove(double*);

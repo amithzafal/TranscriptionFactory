@@ -39,7 +39,7 @@ OBJEXT     := o
 
 # VTK library installation path
 VTKDIR     := $(LIBDIR)/VTK/build
-HDF5DIR    := $(LIBDIR)/hdf5-1.14.5/hdf5/
+HDF5DIR    := $(LIBDIR)/hdf5-1.14.5/build
 
 # Required VTK modules
 MODULES    := CommonComputationalGeometry CommonCore CommonDataModel CommonExecutionModel CommonMath CommonMisc CommonSystem CommonTransforms FiltersCore FiltersGeneral FiltersSources IOCore IOXML IOXMLParser
@@ -47,13 +47,17 @@ MODULES    := CommonComputationalGeometry CommonCore CommonDataModel CommonExecu
 VTKMODS    := $(foreach mod,$(MODULES),-DVTK_MODULE_ENABLE_VTK_$(mod)=YES)
 VTKLIBS    := $(foreach mod,$(MODULES),-lvtk$(mod))
 
+HDF5LIBS   := -lhdf5 -lhdf5_cpp
+
+
 # Flags, libraries and includes
 INC        := -I$(INCDIR) -isystem$(INCDIR)/vtk -isystem$(INCDIR)/hdf5
-LIB        := -Wl,-rpath,$(CURDIR)/$(LIBDIR) -L$(LIBDIR) $(VTKLIBS) -lvtksys -lvtkzlib -lvtkdoubleconversion -lvtkexpat -lvtkloguru -lvtklz4 -lvtklzma
+LIB        := -Wl,-rpath,$(CURDIR)/$(LIBDIR) -L$(LIBDIR) $(VTKLIBS) $(HDF5LIBS) -lvtksys -lvtkzlib -lvtkdoubleconversion -lvtkexpat -lvtkloguru -lvtklz4 -lvtklzma
 FPATHS     := -D__DPATH__=$(CURDIR)/$(DATDIR)
 FEXTRA     := -D__VERSION_MAJOR__=$(VSN_MAJ) -D__VERSION_MINOR__=$(VSN_MIN) -DNDEBUG
 CXXFLAGS   := -std=c++11 -Wshadow -Wall -Wextra -O3 -ffast-math -flto
 CMAKEFLAGS := -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(CURDIR) -DVTK_VERSIONED_INSTALL=OFF -DVTK_BUILD_TESTING=OFF -DVTK_GROUP_ENABLE_Rendering=NO -DVTK_GROUP_ENABLE_StandAlone=NO $(VTKMODS)
+CMAKEFHDF5 := -G "Unix Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SHARED_LIBS:BOOL=OFF -DBUILD_TESTING:BOOL=OFF -DHDF5_BUILD_TOOLS:BOOL=ON -DHDF5_BUILD_CPP_LIB:BOOL=ON 
 
 # Object files lists
 SOURCES    := $(shell find $(SRCDIR) -type f -iname "*.$(SRCEXT)")
@@ -61,8 +65,7 @@ OBJECTS    := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEX
 
 # VTK objects and directories for full clean
 VTKCLEAN   := $(VTKDIR) $(LIBDIR)/cmake $(TARGETDIR)/vtk*
-HDF5CLEAN  := $(HDF5DIR) $(LIBDIR)/cmake $(TARGETDIR)/hdf5*
-
+HDF5CLEAN  := $(HDF5DIR) $(TARGETDIR)/hdf5*
 # Default make
 all: dirs $(TARGET)
 	@echo "\033[1;31mCompiled $(TARGET) v$(VSN_MAJ).$(VSN_MIN)\033[0m"
@@ -88,6 +91,7 @@ clean:
 cleanlib:
 	@echo "\033[1;31mCleaning library files...\033[0m"
 	@$(RM) -rf $(VTKCLEAN)
+	@$(RM) -rf $(HDF5CLEAN)
 
 # Clean directories
 cleaner: clean cleanlib
@@ -102,7 +106,7 @@ ifeq ($(wildcard $(INCDIR)/vtk/.),)
 	@exit 1
 else
 	@echo "\033[1;31mLinking object files...\033[0m"
-	@$(LD) -o $(TARGETDIR)/$(TARGET) $(CXXFLAGS) $^ $(LIB)
+	$(LD) -o $(TARGETDIR)/$(TARGET) $(CXXFLAGS) $^ $(LIB)
 endif
 
 # Compile
@@ -112,13 +116,13 @@ ifeq ($(wildcard $(INCDIR)/vtk/.),)
 	@exit 1
 else
 	@echo "\033[1;34mBuilding: \033[0m" $<
-	@mkdir -p $(dir $@)
-	@$(CXX) $(CXXFLAGS) $(FPATHS) $(FEXTRA) $(INC) -c -o $@ $<
-	@$(CXX) $(CXXFLAGS) $(FPATHS) $(FEXTRA) $(INC) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
-	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
-	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
-	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
-	@$(RM) -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+	mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(FPATHS) $(FEXTRA) $(INC) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(FPATHS) $(FEXTRA) $(INC) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+	cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	$(RM) -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 endif
 
 # Setup (minimal) VTK build
@@ -133,16 +137,23 @@ libvtk: $(VTKDIR)/Makefile
 	@$(MAKE) -C $(VTKDIR) install
 	@echo "\033[1;34mSuccessfully compiled VTK library\033[0m"
 
-$(HDF5DIR)/Makefile:
+libhdf5:
 	@echo "\033[1;34mBuilding HDF5 library...\033[0m"
-	@mkdir -p $(HDF5DIR)
-	@cd $(HDF5DIR) && $(CMAKE) -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(CURDIR) ..
-	
-# Install VTK headers/dynamic library files
-libhdf5: $(HDF5DIR)/Makefile
-	@$(MAKE) -C $(HDF5DIR) -j4
-	@$(MAKE) -C $(HDF5DIR) install
+	mkdir -p $(HDF5DIR)
+	cd $(HDF5DIR) && $(CMAKE) $(CMAKEFHDF5) ..
+	cd $(HDF5DIR) && $(CMAKE) --build . --config Release
+	cd $(HDF5DIR) && cpack -C Release CPackConfig.cmake
+	cd $(HDF5DIR) && ./HDF5-1.14.5-Linux.sh
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(TARGETDIR)/* $(TARGETDIR)/
+	mkdir -p $(INCDIR)/hdf5
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(INCDIR)/* $(INCDIR)/hdf5/
+	mkdir -p $(LIBDIR)/cmake/hdf5
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/cmake/* $(LIBDIR)/cmake/hdf5/
+	mkdir share
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/share/* share/
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(LIBDIR)/* $(LIBDIR)/
 	@echo "\033[1;34mSuccessfully compiled HDF5 library\033[0m"
+
 
 # Non-file targets
 .PHONY: all dirs run clean cleanlib cleaner libvtk libhdf5

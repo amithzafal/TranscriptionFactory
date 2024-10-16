@@ -11,10 +11,17 @@
 
 #include <array>
 #include <string>
+
+#include <vtkLine.h>
+#include <vtkPointData.h>
+#include <vtkFloatArray.h>
+#include <vtkCubeSource.h>
+#include <vtkXMLPolyDataReader.h>
+#include <vtkXMLPolyDataWriter.h>
 #include "H5Cpp.h"
 
 // Box linear dimension
-#define L 5
+#define L 6
 
 // Custom macros, compile-time constants & typedefs
 #define SQR(x) ((x)*(x))
@@ -34,7 +41,7 @@ typedef std::array<double, 3> double3;
 
 // Runtime global parameters
 extern std::string outputDir;
-extern std::string FILE_NAME;
+extern std::string H5fileName;
 
 extern std::string domainPath;
 extern std::string painterPath;

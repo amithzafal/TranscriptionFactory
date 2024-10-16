@@ -335,18 +335,21 @@ double MCLiqLattice::GetCouplingEnergyPainter(const double hetTable[Ntot], const
 }
 
 void MCLiqLattice::ToHDF5(int frame)
-{
+{	
+	using namespace H5;
+
+	const H5std_string FILE_PATH( H5fileName );
 	char DATASET_NAME[32];
 	sprintf(DATASET_NAME, "liq%05d", frame);
 	
-	H5::H5File file( FILE_NAME, H5F_ACC_RDWR);
+	H5File file( FILE_PATH, H5F_ACC_RDWR);
 	hsize_t dimsf[2];
 	dimsf[0] = nLiq;
 	dimsf[1] = 7;
-	H5::DataSpace dataspace( 2, dimsf);
-	H5::DataSet dataset = file.createDataSet( DATASET_NAME, H5::PredType::NATIVE_DOUBLE, dataspace );
+	DataSpace dataspace( 2, dimsf);
+	DataSet dataset = file.createDataSet( DATASET_NAME, PredType::NATIVE_DOUBLE, dataspace );
 	
-	double data[nLiq,7] = {};
+	double data[nLiq][7];
 	for ( int i = 0; i < nLiq; ++i )
 	{
 		int vi = spinConf[i];
@@ -355,18 +358,18 @@ void MCLiqLattice::ToHDF5(int frame)
 		for ( int v = 0; v < 12; ++v )
 			aveDensity += spinTable[bitTable[v+1][vi]] / 12.;
 				
-		data[i,0] = xyzTable[0][vi];
-		data[i,1] = xyzTable[1][vi];
-		data[i,2] = xyzTable[2][vi];
+		data[i][0] = xyzTable[0][vi];
+		data[i][1] = xyzTable[1][vi];
+		data[i][2] = xyzTable[2][vi];
 
-		data[i,3] = spinDisp[i][0];
-		data[i,4] = spinDisp[i][1];
-		data[i,5] = spinDisp[i][2];
+		data[i][3] = spinDisp[i][0];
+		data[i][4] = spinDisp[i][1];
+		data[i][5] = spinDisp[i][2];
 		
-		data[i,6] = aveDensity;
+		data[i][6] = aveDensity;
 	}
-	std::cout << "1";
-	dataset.write(data , H5::PredType::NATIVE_DOUBLE);
+
+	dataset.write(data , PredType::NATIVE_DOUBLE);
 }
 
 void MCLiqLattice::ToVTK(int frame)
