@@ -21,6 +21,7 @@ public:
 	void Init(int);
 	void GenerateRandom(int);
 	
+	void ToHDF5(int);
 	void ToVTK(int);
 	void FromVTK(int);
 

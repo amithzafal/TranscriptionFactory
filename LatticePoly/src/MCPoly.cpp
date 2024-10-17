@@ -201,6 +201,148 @@ void MCPoly::AcceptMove()
 	++lat->bitTable[0][tadUpdater->vn];
 }
 
+void MCPoly::ToHDF5(int frame)
+{
+	using namespace H5;
+	
+	int data_pol_id[Ntad];
+	double data_pol_type[Ntad];
+	int data_pol_fork[Ntad];
+	int data_pol_state[Ntad];
+	double data_pol_painter[Ntad];
+	double data_pol_position[Ntad][3];
+	
+	std::vector<double3> conf = GetPBCConf();
+
+	for ( int t = 0; t < Ntad; ++t )
+	{
+		data_pol_id[t] = tadConf[t].sisterID;
+
+		data_pol_type[t] = tadConf[t].type;
+
+		data_pol_fork[t] = tadConf[t].isFork() ? (tadConf[t].isLeftFork() ? -1 : 1) : 0;
+		
+		data_pol_state[t] = tadConf[t].status;
+		
+		data_pol_painter[t] = tadConf[t].painter;
+		
+		data_pol_position[t][0] = conf[t][0];
+		data_pol_position[t][0] = conf[t][0];
+		data_pol_position[t][0] = conf[t][0];
+	}
+	
+
+	const H5std_string FILE_PATH( H5fileName );
+	const int RANK = 2;
+
+	// char Frame_group_Name[32];
+	// sprintf(Frame_group_Name, "/Pol/Frame%05d", frame);
+	// const H5std_string FRAME_GROUP_NAME( Frame_group_Name );
+
+	H5File file(FILE_PATH, H5F_ACC_RDWR);
+	Group pol_group(file.openGroup("/Pol"));
+
+
+	char Position_dataset_Name[32];
+	sprintf(Position_dataset_Name, "%05d_position_dataset", frame);
+	const H5std_string POSITION_DATASET_NAME(Position_dataset_Name);
+
+	hsize_t dims_position[RANK];
+	dims_position[0] = Ntad;
+	dims_position[1] = 3;
+	
+	DataSpace *dataspace_position = new DataSpace( RANK, dims_position);
+	DataSet *dataset_position = new DataSet(pol_group.createDataSet( POSITION_DATASET_NAME, PredType::NATIVE_DOUBLE, *dataspace_position ));
+	dataset_position->write(data_pol_position , PredType::NATIVE_DOUBLE);
+
+	delete dataset_position;
+	delete dataspace_position;
+
+	
+	
+	char Id_dataset_Name[32];
+	sprintf(Id_dataset_Name, "%05d_id_dataset", frame);
+	const H5std_string ID_DATASET_NAME(Id_dataset_Name);
+
+	hsize_t dims_id[1];
+	dims_id[0] = Ntad;
+	
+	DataSpace *dataspace_id = new DataSpace( 1, dims_id);
+	DataSet *dataset_id = new DataSet(pol_group.createDataSet( ID_DATASET_NAME, PredType::NATIVE_INT, *dataspace_id ));
+	dataset_id->write(data_pol_id , PredType::NATIVE_INT);
+
+	delete dataset_id;
+	delete dataspace_id;
+
+
+
+	char Fork_dataset_Name[32];
+	sprintf(Fork_dataset_Name, "%05d_fork_dataset", frame);
+	const H5std_string FORK_DATASET_NAME(Fork_dataset_Name);
+
+	hsize_t dims_fork[1];
+	dims_fork[0] = Ntad;
+	
+	DataSpace *dataspace_fork = new DataSpace( 1, dims_fork);
+	DataSet *dataset_fork = new DataSet(pol_group.createDataSet( FORK_DATASET_NAME, PredType::NATIVE_INT, *dataspace_fork ));
+	dataset_fork->write(data_pol_fork , PredType::NATIVE_INT);
+
+	delete dataset_fork;
+	delete dataspace_fork;
+
+
+
+	char State_dataset_Name[32];
+	sprintf(State_dataset_Name, "%05d_state_dataset", frame);
+	const H5std_string STATE_DATASET_NAME(State_dataset_Name);
+
+	hsize_t dims_state[1];
+	dims_state[0] = Ntad;
+	
+	DataSpace *dataspace_state = new DataSpace( 1, dims_state);
+	DataSet *dataset_state = new DataSet(pol_group.createDataSet( STATE_DATASET_NAME, PredType::NATIVE_INT, *dataspace_state ));
+	dataset_state->write(data_pol_state , PredType::NATIVE_INT);
+
+	delete dataset_state;
+	delete dataspace_state;
+
+
+	
+	char Type_dataset_Name[32];
+	sprintf(Type_dataset_Name, "%05d_type_dataset", frame);
+	const H5std_string TYPE_DATASET_NAME(Type_dataset_Name);
+
+	hsize_t dims_type[1];
+	dims_type[0] = Ntad;
+	
+	DataSpace *dataspace_type = new DataSpace( 1, dims_type);
+	DataSet *dataset_type = new DataSet(pol_group.createDataSet( TYPE_DATASET_NAME, PredType::NATIVE_DOUBLE, *dataspace_type ));
+	dataset_type->write(data_pol_type , PredType::NATIVE_DOUBLE);
+
+	delete dataset_type;
+	delete dataspace_type;
+
+
+
+	char Painter_dataset_Name[32];
+	sprintf(Painter_dataset_Name, "%05d_painter_dataset", frame);
+	const H5std_string PAINTER_DATASET_NAME(Painter_dataset_Name);
+
+	hsize_t dims_painter[1];
+	dims_painter[0] = Ntad;
+	
+	DataSpace *dataspace_painter = new DataSpace( 1, dims_painter);
+	DataSet *dataset_painter = new DataSet(pol_group.createDataSet( PAINTER_DATASET_NAME, PredType::NATIVE_DOUBLE, *dataspace_painter ));
+	dataset_painter->write(data_pol_painter , PredType::NATIVE_DOUBLE);
+
+	delete dataset_painter;
+	delete dataspace_painter;
+
+
+	pol_group.close();
+	file.close();
+}
+
 void MCPoly::ToVTK(int frame)
 {
 	char fileName[32];

@@ -338,18 +338,11 @@ void MCLiqLattice::ToHDF5(int frame)
 {	
 	using namespace H5;
 
-	const H5std_string FILE_PATH( H5fileName );
-	char DATASET_NAME[32];
-	sprintf(DATASET_NAME, "liq%05d", frame);
-	
-	H5File file( FILE_PATH, H5F_ACC_RDWR);
-	hsize_t dimsf[2];
-	dimsf[0] = nLiq;
-	dimsf[1] = 7;
-	DataSpace dataspace( 2, dimsf);
-	DataSet dataset = file.createDataSet( DATASET_NAME, PredType::NATIVE_DOUBLE, dataspace );
-	
-	double data[nLiq][7];
+
+	double data_position[nLiq][3];
+	double data_density[nLiq];
+	double data_displacement[nLiq][3];
+
 	for ( int i = 0; i < nLiq; ++i )
 	{
 		int vi = spinConf[i];
@@ -358,18 +351,83 @@ void MCLiqLattice::ToHDF5(int frame)
 		for ( int v = 0; v < 12; ++v )
 			aveDensity += spinTable[bitTable[v+1][vi]] / 12.;
 				
-		data[i][0] = xyzTable[0][vi];
-		data[i][1] = xyzTable[1][vi];
-		data[i][2] = xyzTable[2][vi];
+		data_position[i][0] = xyzTable[0][vi];
+		data_position[i][1] = xyzTable[1][vi];
+		data_position[i][2] = xyzTable[2][vi];
 
-		data[i][3] = spinDisp[i][0];
-		data[i][4] = spinDisp[i][1];
-		data[i][5] = spinDisp[i][2];
+		data_displacement[i][0] = spinDisp[i][0];
+		data_displacement[i][1] = spinDisp[i][1];
+		data_displacement[i][2] = spinDisp[i][2];
 		
-		data[i][6] = aveDensity;
+		data_density[i] = aveDensity;
 	}
 
-	dataset.write(data , PredType::NATIVE_DOUBLE);
+	const H5std_string FILE_PATH( H5fileName );
+	const int RANK = 2;
+
+	// char Frame_group_Name[32];
+	// sprintf(Frame_group_Name, "/Liq/Frame%05d", frame);
+	// const H5std_string FRAME_GROUP_NAME( Frame_group_Name );
+
+	H5File file(FILE_PATH, H5F_ACC_RDWR);
+	Group liq_group(file.openGroup("/Liq"));
+	// Group *frame_group = new Group(file.openGroup(FRAME_GROUP_NAME));
+
+
+
+	char Position_dataset_Name[32];
+	sprintf(Position_dataset_Name, "%05d_position_dataset", frame);
+	const H5std_string POSITION_DATASET_NAME(Position_dataset_Name);
+
+	hsize_t dims_position[RANK];
+	dims_position[0] = nLiq;
+	dims_position[1] = 3;
+	
+	DataSpace *dataspace_position = new DataSpace( RANK, dims_position);
+	
+	DataSet *dataset_position = new DataSet(liq_group.createDataSet( POSITION_DATASET_NAME, PredType::NATIVE_DOUBLE, *dataspace_position ));
+	
+	dataset_position->write(data_position , PredType::NATIVE_DOUBLE);
+
+	delete dataset_position;
+	delete dataspace_position;
+
+	char Density_dataset_Name[32];
+	sprintf(Density_dataset_Name, "%05d_density_dataset", frame);
+	const H5std_string DENSITY_DATASET_NAME(Density_dataset_Name);
+
+	hsize_t dims_density[1];
+	dims_density[0] = nLiq;
+	
+	DataSpace *dataspace_density = new DataSpace( 1, dims_density);
+	
+	DataSet *dataset_density = new DataSet(liq_group.createDataSet( DENSITY_DATASET_NAME, PredType::NATIVE_DOUBLE, *dataspace_density ));
+	
+	dataset_density->write(data_density , PredType::NATIVE_DOUBLE);
+
+	delete dataset_density;
+	delete dataspace_density;
+
+	
+	char Displacement_dataset_Name[32];
+	sprintf(Displacement_dataset_Name, "%05d_displacement_dataset", frame);
+	const H5std_string DISPLACEMENT_DATASET_NAME(Displacement_dataset_Name);
+
+	hsize_t dims_displacement[RANK];
+	dims_displacement[0] = nLiq;
+	dims_displacement[1] = 3;
+	
+	DataSpace *dataspace_displacement = new DataSpace( RANK, dims_displacement);
+	
+	DataSet *dataset_displacement = new DataSet(liq_group.createDataSet( DISPLACEMENT_DATASET_NAME, PredType::NATIVE_DOUBLE, *dataspace_displacement ));
+	
+	dataset_displacement->write(data_displacement , PredType::NATIVE_DOUBLE);
+
+	delete dataset_displacement;
+	delete dataspace_displacement;
+	liq_group.close();
+	// frame_group->close();
+	file.close();
 }
 
 void MCLiqLattice::ToVTK(int frame)

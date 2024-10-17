@@ -6,6 +6,7 @@ include/vtk/
 lib/*.dylib
 lib/cmake/
 lib/lib*
+lib/libvtk
 resources/__pycache__/
 share/
 include/H5*

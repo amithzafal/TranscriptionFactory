@@ -74,6 +74,11 @@ void MCSim<lattice, polymer>::InitHDF5File()
 	using namespace H5;
 	const H5std_string FILE_PATH( H5fileName );
 	H5File file(FILE_PATH, H5F_ACC_TRUNC);
+	Group Pol_group(file.createGroup( "/Pol"));
+	Pol_group.close();
+	Group Liq_group(file.createGroup( "/Liq"));
+	Liq_group.close();
+	file.close();
 }
 
 
@@ -200,6 +205,7 @@ template<class lattice, class polymer>
 void MCSim<lattice, polymer>::DumpHDF5(int frame)
 {
 	lat->ToHDF5(frame);
+	pol->ToHDF5(frame);
 }
 
 
