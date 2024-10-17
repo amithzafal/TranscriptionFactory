@@ -75,6 +75,16 @@ void MCSim<lattice, polymer>::InitHDF5File()
 	const H5std_string FILE_PATH( H5fileName );
 	H5File file(FILE_PATH, H5F_ACC_TRUNC);
 	Group Pol_group(file.createGroup( "/Pol"));
+	hsize_t dims_L[1];
+	dims_L[0] = 1;
+	int attr_data[1];
+	attr_data[0] = L;
+	H5std_string ATTR_NAME("L");
+	std::cout << attr_data;
+	DataSpace attr_dataspace_L = DataSpace(1,dims_L);
+	Attribute arribute_L = Pol_group.createAttribute(ATTR_NAME,PredType::NATIVE_INT,attr_dataspace_L);
+	arribute_L.write(PredType::NATIVE_INT,attr_data);
+	
 	Pol_group.close();
 	Group Liq_group(file.createGroup( "/Liq"));
 	Liq_group.close();
