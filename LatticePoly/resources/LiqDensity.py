@@ -18,15 +18,15 @@ class LiqDensity():
 
 	def __init__(self, outputDir, initFrame, threshold=0.5):
 		self.reader = vtkReader(outputDir, initFrame, readLiq=True, readPoly=False)
-		
+
 		self.threshold = threshold
 
 		self.meanFile = os.path.join(self.reader.outputDir, "liqMean.res")
 		self.stdFile = os.path.join(self.reader.outputDir, "liqSTD.res")
-		
-		if os.path.exists(self.meanFile) & os.path.exists(self.stdFile):
-			print("Files '%s' and '%s' already exist - aborting" % (self.meanFile, self.stdFile))
-			sys.exit()
+
+		# if os.path.exists(self.meanFile) & os.path.exists(self.stdFile):
+		# 	print("Files '%s' and '%s' already exist - aborting" % (self.meanFile, self.stdFile))
+		# 	sys.exit()
 
 
 	def Compute(self):
@@ -35,25 +35,25 @@ class LiqDensity():
 
 		for i in range(self.reader.N):
 			self.ProcessFrame(i)
-									
+
 			if (i+1) % 10 == 0:
 				print("Processed %d out of %d configurations" % (i+1, self.reader.N))
 
-			
-	def ProcessFrame(self, i):
-		data = next(self.reader)
 
+	def ProcessFrame(self, i):
+
+		data = next(self.reader)
+		print(i)
 		meanDens = data.liqDens.sum()
 		stdDens = np.square(data.liqDens - data.liqDens.mean()).sum()
-		
 		self.meanHist[i] = np.count_nonzero(data.liqDens > self.threshold)
 		self.stdHist[i] = stdDens
 
-	
+
 	def Print(self):
 		np.savetxt(self.meanFile, self.meanHist / self.reader.nLiq)
 		np.savetxt(self.stdFile, np.sqrt(self.stdHist / self.reader.nLiq))
-
+		print(self.meanHist / self.reader.nLiq, np.sqrt(self.stdHist / self.reader.nLiq))
 		print("\033[1;32mPrinted liquid mean densities to '%s'\033[0m" % self.meanFile)
 		print("\033[1;32mPrinted liquid density STDs fraction to '%s'\033[0m" % self.stdFile)
 

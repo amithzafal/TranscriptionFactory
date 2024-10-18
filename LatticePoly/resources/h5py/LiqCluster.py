@@ -2,7 +2,7 @@
 ##  LiqCluster.py
 ##  LatticePoly
 ##
-##  Created by mtortora on 10/11/2020.
+##  Created by ppuel on 18/10/2024.
 ##  Copyright © 2020 ENS Lyon. All rights reserved.
 ##
 
@@ -13,26 +13,19 @@ import math as m
 import numpy as np
 import networkx as nx
 
-from vtkReader import vtkReader
-
+from hdf5Reader import hdf5Reader
+import h5py
 
 class LiqCluster():
 
-	def __init__(self, outputDir, initFrame, threshold=0.5, nMax=10, cutoff=1/2**0.5 + 1e-3):
-		self.reader = vtkReader(outputDir, initFrame, readLiq=True, readPoly=False)
+	def __init__(self, outputDir, fileName, initFrame, threshold=0.5, nMax=10, cutoff=1/2**0.5 + 1e-3):
+		
+		self.reader = hdf5Reader(outputDir, fileName, initFrame=-1, readLiq=True, readPoly=False, backInBox=False)
+		self.filePath = os.path.join(outputDir, fileName)
 		
 		self.nMax = nMax
 		self.cutoff = cutoff
 		self.threshold = threshold
-		
-		self.numFile = os.path.join(self.reader.outputDir, "liqDropNum.res")
-		self.radFile = os.path.join(self.reader.outputDir, "liqDropRad.res")
-		self.meanFile = os.path.join(self.reader.outputDir, "liqRadii.res")
-		self.fractionFile = os.path.join(self.reader.outputDir, "liqFraction.res")
-
-		if os.path.exists(self.numFile) & os.path.exists(self.radFile) & os.path.exists(self.meanFile) & os.path.exists(self.fractionFile):
-			print("Files '%s', '%s' and '%s' already exist - aborting" % (self.numFile, self.radFile, self.fractionFile))
-			sys.exit()
 
 	def Compute(self):
 		self.dropNum = np.zeros(self.reader.N, dtype=np.int32)
@@ -43,7 +36,7 @@ class LiqCluster():
 		for i in range(self.reader.N):
 			self.ProcessFrame(i)
 									
-			if (i+1) % 1000 == 0:
+			if (i+1) % 100 == 0:
 				print("Processed %d out of %d configurations" % (i+1, self.reader.N))
 
 			
@@ -74,16 +67,19 @@ class LiqCluster():
 
 	
 	def Print(self):
-		np.savetxt(self.radFile, self.dropRad)
-		np.savetxt(self.numFile, self.dropNum)
-		np.savetxt(self.meanFile, self.dropMean)
+		self.reader.Close()
+		file = h5py.File(self.filePath, 'r+')
+		file.create_dataset("process_dropRad", data = self.dropRad)
+		file.create_dataset("process_dropNum", data = self.dropNum)
+		file.create_dataset("process_dropMean", data = self.dropMean)
+		file.create_dataset("process_liqFraction", data = self.liqFraction)
 
-		np.savetxt(self.fractionFile, self.liqFraction)
-		print("\033[1;32mPrinted droplet numbers to '%s'\033[0m" % self.numFile)
-		print("\033[1;32mPrinted individual/mean droplet radii to '%s' and '%s'\033[0m" % (self.radFile, self.meanFile))
+		print("\033[1;32mPrinted droplet numbers to '%s'\033[0m" % "process_dropNum")
+		print("\033[1;32mPrinted individual/mean droplet radii to '%s' and '%s'\033[0m" % ("process_dropRad", "process_dropMean"))
+		print("\033[1;32mPrinted liquid fraction to '%s'\033[0m" % "process_liqFraction")
 
-		print("\033[1;32mPrinted liquid fraction to '%s'\033[0m" % self.fractionFile)
-
+		file.close()
+	
 	@staticmethod
 	def _connectPBC(dims, pts, cutoff):
 		nPoints = pts.shape[0]
@@ -112,14 +108,16 @@ class LiqCluster():
 					
 					
 if __name__ == "__main__":
-	if len(sys.argv) != 3:
-		print("\033[1;31mUsage is %s outputDir initFrame\033[0m" % sys.argv[0])
+	if len(sys.argv) != 4:
+		print("\033[1;31mUsage is %s outputDir fileName initFrame\033[0m" % sys.argv[0])
 		sys.exit()
 
 	outputDir = sys.argv[1]
-	initFrame = int(sys.argv[2])
+	fileName = sys.argv[2]
+	initFrame = int(sys.argv[3])
 
-	cluster = LiqCluster(outputDir, initFrame=initFrame)
+
+	cluster = LiqCluster(outputDir, fileName, initFrame=initFrame)
 
 	cluster.Compute()
 	cluster.Print()
