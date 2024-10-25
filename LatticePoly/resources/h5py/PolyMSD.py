@@ -22,14 +22,6 @@ class PolyMSD():
 		self.reader = hdf5Reader(outputDir, fileName, initFrame, readLiq=False, readPoly=True)
 		self.filePath = os.path.join(outputDir, fileName)
 		
-		# self.msdHetFile = os.path.join(self.reader.outputDir, "polyHetMSD.res")
-		# self.msdHomFile = os.path.join(self.reader.outputDir, "polyHomMSD.res")
-		# self.msdPREFile = os.path.join(self.reader.outputDir, "polyPREMSD.res")
-
-		# if os.path.exists(self.msdHetFile) & os.path.exists(self.msdHomFile) & os.path.exists(self.msdPREFile):
-		# 	print("Files '%s', '%s' and '%s' already exist - aborting" % (self.msdHetFile, self.msdHomFile, self.msdPREFile))
-		# 	sys.exit()
-
 
 	def Compute(self):
 		vMem = psutil.virtual_memory()
@@ -83,21 +75,21 @@ class PolyMSD():
 		file = h5py.File(self.filePath, 'r+')
 		if np.count_nonzero(self.reader.polyPainter == 1) > 0:
 			msdPRE = self.cumulDistPRE / np.count_nonzero(self.reader.polyPainter == 1)
-			file.create_dataset("process_polyPREMSD", data = msdPRE)
+			file.create_dataset("polyPREMSD", data = msdPRE)
 
-			print("\033[1;32mPrinted PRE MSDs to '%s'\033[0m" % "process_polyPREMSD")
+			print("\033[1;32mPrinted PRE MSDs to '%s'\033[0m" % "polyPREMSD")
 
 		if self.reader.nHet > 0:
 			msdHet = self.cumulDistHet /  self.reader.nHet
-			file.create_dataset("process_polyHetMSD", data = msdHet)
+			file.create_dataset("polyHetMSD", data = msdHet)
 			
-			print("\033[1;32mPrinted heterochromatic MSDs to '%s'\033[0m" % "process_polyHetMSD")
+			print("\033[1;32mPrinted heterochromatic MSDs to '%s'\033[0m" % "polyHetMSD")
 			
 		if self.reader.nEuc > 0:
 			msdHom = self.cumulDistHom / self.reader.nEuc
-			file.create_dataset("process_polyHomMSD", data = msdHom)
+			file.create_dataset("polyHomMSD", data = msdHom)
 			
-			print("\033[1;32mPrinted euchromatic MSDs to '%s'\033[0m" % "process_polyHomMSD")
+			print("\033[1;32mPrinted euchromatic MSDs to '%s'\033[0m" % "polyHomMSD")
 		
 		file.close()
 
@@ -106,9 +98,9 @@ class PolyMSD():
 		self.reader.Close()
 		file = h5py.File(self.filePath, 'r+')
 		msdFile = self.reader.outputDir + "/msdTad%05d.res" % idxTad
-		file.create_dataset("process_msdTad%05d" % idxTad, data = self.distTad)
+		file.create_dataset("msdTad%05d" % idxTad, data = self.distTad)
 		
-		print("\033[1;32mPrinted TAD MSD to '%s'\033[0m" % "process_msdTad%05d" % idxTad)
+		print("\033[1;32mPrinted TAD MSD to '%s'\033[0m" % "msdTad%05d" % idxTad)
 
 		file.close()
 	
@@ -117,19 +109,18 @@ if __name__ == "__main__":
 	if len(sys.argv) not in [4, 5]:
 		print("\033[1;31mUsage is %s outputDir fileName initFrame [idxTad]\033[0m" % sys.argv[0])
 		sys.exit()
-
 	outputDir = sys.argv[1]
 	fileName = sys.argv[2]
 	initFrame = int(sys.argv[3])
 
 	msd = PolyMSD(outputDir, fileName, initFrame=initFrame)
 
-	if len(sys.argv) == 3:
+	if len(sys.argv) == 4:
 		msd.Compute()
 		msd.Print()
 		
-	elif len(sys.argv) == 4:
-		idxTad = int(sys.argv[3])
+	elif len(sys.argv) == 5:
+		idxTad = int(sys.argv[4])
 	
 		msd.ComputeTad(idxTad)
 		msd.PrintTad(idxTad)

@@ -61,9 +61,9 @@ class LiqMSD():
 
 		self.reader.Close()
 		file = h5py.File(self.filePath, 'r+')
-		file.create_dataset("process_liqMSD", data = msdLiq)
+		file.create_dataset("liqMSD", data = msdLiq)
 	
-		print("\033[1;32mPrinted liquid MSDs to '%s'\033[0m" % "process_liqMSD")
+		print("\033[1;32mPrinted liquid MSDs to '%s'\033[0m" % "liqMSD")
 		
 		file.close()
 

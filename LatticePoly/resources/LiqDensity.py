@@ -24,9 +24,9 @@ class LiqDensity():
 		self.meanFile = os.path.join(self.reader.outputDir, "liqMean.res")
 		self.stdFile = os.path.join(self.reader.outputDir, "liqSTD.res")
 
-		# if os.path.exists(self.meanFile) & os.path.exists(self.stdFile):
-		# 	print("Files '%s' and '%s' already exist - aborting" % (self.meanFile, self.stdFile))
-		# 	sys.exit()
+		if os.path.exists(self.meanFile) & os.path.exists(self.stdFile):
+			print("Files '%s' and '%s' already exist - aborting" % (self.meanFile, self.stdFile))
+			sys.exit()
 
 
 	def Compute(self):
@@ -43,7 +43,6 @@ class LiqDensity():
 	def ProcessFrame(self, i):
 
 		data = next(self.reader)
-		print(i)
 		meanDens = data.liqDens.sum()
 		stdDens = np.square(data.liqDens - data.liqDens.mean()).sum()
 		self.meanHist[i] = np.count_nonzero(data.liqDens > self.threshold)
@@ -53,7 +52,6 @@ class LiqDensity():
 	def Print(self):
 		np.savetxt(self.meanFile, self.meanHist / self.reader.nLiq)
 		np.savetxt(self.stdFile, np.sqrt(self.stdHist / self.reader.nLiq))
-		print(self.meanHist / self.reader.nLiq, np.sqrt(self.stdHist / self.reader.nLiq))
 		print("\033[1;32mPrinted liquid mean densities to '%s'\033[0m" % self.meanFile)
 		print("\033[1;32mPrinted liquid density STDs fraction to '%s'\033[0m" % self.stdFile)
 

@@ -95,15 +95,15 @@ class LiqPolyCoincidence():
     def Print(self):
         self.reader.Close()
         file = h5py.File(self.filePath, 'r+')
-        file.create_dataset("process_liq_Het_Coincidence", data = self.liq_Het_Cont)
-        file.create_dataset("process_poly_Het_Coincidence", data = self.poly_Het_Cont)
-        file.create_dataset("process_liq_PRE_Coincidence", data = self.liq_PRE_Cont)
-        file.create_dataset("process_poly_PRE_Coincidence", data = self.poly_PRE_Cont)
+        file.create_dataset("liq_Het_Coincidence", data = self.liq_Het_Cont)
+        file.create_dataset("poly_Het_Coincidence", data = self.poly_Het_Cont)
+        file.create_dataset("liq_PRE_Coincidence", data = self.liq_PRE_Cont)
+        file.create_dataset("poly_PRE_Coincidence", data = self.poly_PRE_Cont)
 
-        print("\033[1;32mPrinted mean liquid Coincidence fractions to '%s'\033[0m" % "process_liq_Het_Coincidence")
-        print("\033[1;32mPrinted mean polymer Coincidence fractions to '%s'\033[0m" % "process_poly_Het_Coincidence")
-        print("\033[1;32mPrinted mean liquid Coincidence fractions to '%s'\033[0m" % "process_liq_PRE_Coincidence")
-        print("\033[1;32mPrinted mean polymer Coincidence fractions to '%s'\033[0m" % "process_poly_PRE_Coincidence")
+        print("\033[1;32mPrinted mean liquid Coincidence fractions to '%s'\033[0m" % "liq_Het_Coincidence")
+        print("\033[1;32mPrinted mean polymer Coincidence fractions to '%s'\033[0m" % "poly_Het_Coincidence")
+        print("\033[1;32mPrinted mean liquid Coincidence fractions to '%s'\033[0m" % "liq_PRE_Coincidence")
+        print("\033[1;32mPrinted mean polymer Coincidence fractions to '%s'\033[0m" % "poly_PRE_Coincidence")
 
         file.close()
 

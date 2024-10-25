@@ -69,14 +69,14 @@ class LiqCluster():
 	def Print(self):
 		self.reader.Close()
 		file = h5py.File(self.filePath, 'r+')
-		file.create_dataset("process_dropRad", data = self.dropRad)
-		file.create_dataset("process_dropNum", data = self.dropNum)
-		file.create_dataset("process_dropMean", data = self.dropMean)
-		file.create_dataset("process_liqFraction", data = self.liqFraction)
+		file.create_dataset("liqDropRad", data = self.dropRad)
+		file.create_dataset("liqDropNum", data = self.dropNum)
+		file.create_dataset("liqRadii", data = self.dropMean)
+		file.create_dataset("liqFraction", data = self.liqFraction)
 
-		print("\033[1;32mPrinted droplet numbers to '%s'\033[0m" % "process_dropNum")
-		print("\033[1;32mPrinted individual/mean droplet radii to '%s' and '%s'\033[0m" % ("process_dropRad", "process_dropMean"))
-		print("\033[1;32mPrinted liquid fraction to '%s'\033[0m" % "process_liqFraction")
+		print("\033[1;32mPrinted droplet numbers to '%s'\033[0m" % "liqDropNum")
+		print("\033[1;32mPrinted individual/mean droplet radii to '%s' and '%s'\033[0m" % ("liqDropRad", "liqRadii"))
+		print("\033[1;32mPrinted liquid fraction to '%s'\033[0m" % "liqFraction")
 
 		file.close()
 	

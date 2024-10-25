@@ -227,8 +227,8 @@ void MCPoly::ToHDF5(int frame)
 		data_pol_painter[t] = tadConf[t].painter;
 		
 		data_pol_position[t][0] = conf[t][0];
-		data_pol_position[t][0] = conf[t][0];
-		data_pol_position[t][0] = conf[t][0];
+		data_pol_position[t][1] = conf[t][1];
+		data_pol_position[t][2] = conf[t][2];
 	}
 	
 

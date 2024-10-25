@@ -23,13 +23,6 @@ class LiqDensity():
 		
 		self.threshold = threshold
 
-		# self.meanFile = os.path.join(self.reader.outputDir, "liqMean.res")
-		# self.stdFile = os.path.join(self.reader.outputDir, "liqSTD.res")
-		
-		# if os.path.exists(self.meanFile) & os.path.exists(self.stdFile):
-		# 	print("Files '%s' and '%s' already exist - aborting" % (self.meanFile, self.stdFile))
-		# 	sys.exit()
-
 
 	def Compute(self):
 		self.meanHist = np.zeros(self.reader.N, dtype=np.float32)
@@ -46,7 +39,6 @@ class LiqDensity():
 		data = next(self.reader)
 		meastdDensnDens = data.liqDens.sum()
 		stdDens = np.square(data.liqDens - data.liqDens.mean()).sum()
-		print(i)
 		self.meanHist[i] = np.count_nonzero(data.liqDens > self.threshold)
 		self.stdHist[i] = stdDens
 
@@ -55,13 +47,11 @@ class LiqDensity():
 
 		self.reader.Close()
 		file = h5py.File(self.filePath,'r+')
-		print(self.meanHist / self.reader.nLiq)
-		print(np.sqrt(self.stdHist / self.reader.nLiq))
 		
-		file.create_dataset("process_liqMean", data = self.meanHist / self.reader.nLiq)
-		file.create_dataset("process_liqSTD", data = np.sqrt(self.stdHist / self.reader.nLiq))
-		print("\033[1;32mPrinted liquid mean densities to '%s'\033[0m" % "process_liqMean")
-		print("\033[1;32mPrinted liquid density STDs fraction to '%s'\033[0m" % "process_liqSTD")
+		file.create_dataset("liqMean", data = self.meanHist / self.reader.nLiq)
+		file.create_dataset("liqSTD", data = np.sqrt(self.stdHist / self.reader.nLiq))
+		print("\033[1;32mPrinted liquid mean densities to '%s'\033[0m" % "liqMean")
+		print("\033[1;32mPrinted liquid density STDs fraction to '%s'\033[0m" % "liqSTD")
 
 		file.close()
 

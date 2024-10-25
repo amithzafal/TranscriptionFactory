@@ -20,14 +20,6 @@ class PolyGyration():
 	def __init__(self, outputDir, fileName, initFrame):
 		self.reader = hdf5Reader(outputDir, fileName, initFrame, readLiq=False, readPoly=True)
 		self.filePath = os.path.join(outputDir, fileName)
-					
-		# self.anisoFile = os.path.join(self.reader.outputDir, "polyAniso.res")
-		# self.gyrationFile = os.path.join(self.reader.outputDir, "polyGyration.res")
-
-		# if os.path.exists(self.anisoFile) & os.path.exists(self.gyrationFile):
-		# 	print("Files '%s' and '%s' already exist - aborting" % (self.anisoFile, self.gyrationFile))
-		# 	sys.exit()
-
 
 	def Compute(self):
 		self.polyAniso = np.zeros(self.reader.N, dtype=np.float32)
@@ -68,11 +60,11 @@ class PolyGyration():
 	def Print(self):
 		self.reader.Close()
 		file = h5py.File(self.filePath, 'r+')
-		file.create_dataset("process_polyAniso", data = self.polyAniso)
-		file.create_dataset("process_polyGyration", data = self.polyGyration)
+		file.create_dataset("polyAniso", data = self.polyAniso)
+		file.create_dataset("polyGyration", data = self.polyGyration)
 		
-		print("\033[1;32mPrinted domain gyration radii to '%s'\033[0m" % "process_polyGyration")
-		print("\033[1;32mPrinted domain anisotropy factors to '%s'\033[0m" % "process_polyAniso")
+		print("\033[1;32mPrinted domain gyration radii to '%s'\033[0m" % "polyGyration")
+		print("\033[1;32mPrinted domain anisotropy factors to '%s'\033[0m" % "polyAniso")
 
 		file.close()
 		
