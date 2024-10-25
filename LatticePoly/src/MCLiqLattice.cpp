@@ -336,9 +336,10 @@ double MCLiqLattice::GetCouplingEnergyPainter(const double hetTable[Ntot], const
 
 void MCLiqLattice::ToHDF5(int frame)
 {	
+	std::clock_t c_start = std::clock();
+	
 	using namespace H5;
-
-
+	
 	double data_position[nLiq][3];
 	double data_density[nLiq];
 	double data_displacement[nLiq][3];
@@ -372,8 +373,6 @@ void MCLiqLattice::ToHDF5(int frame)
 	H5File file(FILE_PATH, H5F_ACC_RDWR);
 	Group liq_group(file.openGroup("/Liq"));
 	// Group *frame_group = new Group(file.openGroup(FRAME_GROUP_NAME));
-
-
 
 	char Position_dataset_Name[32];
 	sprintf(Position_dataset_Name, "%05d_position_dataset", frame);
@@ -428,10 +427,19 @@ void MCLiqLattice::ToHDF5(int frame)
 	liq_group.close();
 	// frame_group->close();
 	file.close();
+
+	std::clock_t c_end = std::clock();
+
+	double time_elapsed_ms = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+	std::cout << "CPU time used for MCLiqLattice::ToHDF5: " 
+          	<< time_elapsed_ms 
+          	<< " ms\n";
 }
 
 void MCLiqLattice::ToVTK(int frame)
 {
+	std::clock_t c_start = std::clock();
+
 	char fileName[32];
 	sprintf(fileName, "liq%05d.vtp", frame);
 	
@@ -481,6 +489,13 @@ void MCLiqLattice::ToVTK(int frame)
 	writer->SetInputData(polyData);
 	
 	writer->Write();
+	
+	std::clock_t c_end = std::clock();
+
+	double time_elapsed_ms = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+	std::cout << "CPU time used for MCLiqLattice::ToVTK: " 
+          	<< time_elapsed_ms 
+          	<< " ms\n";
 }
 
 void MCLiqLattice::FromVTK(int frame)

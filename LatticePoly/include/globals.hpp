@@ -11,6 +11,7 @@
 
 #include <array>
 #include <string>
+#include <ctime>
 
 #include <vtkLine.h>
 #include <vtkPointData.h>

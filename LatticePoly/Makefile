@@ -106,7 +106,7 @@ ifeq ($(wildcard $(INCDIR)/vtk/.),)
 	@exit 1
 else
 	@echo "\033[1;31mLinking object files...\033[0m"
-	$(LD) -o $(TARGETDIR)/$(TARGET) $(CXXFLAGS) $^ $(LIB)
+	@$(LD) -o $(TARGETDIR)/$(TARGET) $(CXXFLAGS) $^ $(LIB)
 endif
 
 # Compile
@@ -116,13 +116,13 @@ ifeq ($(wildcard $(INCDIR)/vtk/.),)
 	@exit 1
 else
 	@echo "\033[1;34mBuilding: \033[0m" $<
-	mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(FPATHS) $(FEXTRA) $(INC) -c -o $@ $<
-	$(CXX) $(CXXFLAGS) $(FPATHS) $(FEXTRA) $(INC) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
-	cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
-	sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
-	sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
-	$(RM) -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) $(FPATHS) $(FEXTRA) $(INC) -c -o $@ $<
+	@$(CXX) $(CXXFLAGS) $(FPATHS) $(FEXTRA) $(INC) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	@$(RM) -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 endif
 
 # Setup (minimal) VTK build
@@ -139,19 +139,19 @@ libvtk: $(VTKDIR)/Makefile
 
 libhdf5:
 	@echo "\033[1;34mBuilding HDF5 library...\033[0m"
-	mkdir -p $(HDF5DIR)
-	cd $(HDF5DIR) && $(CMAKE) $(CMAKEFHDF5) ..
-	cd $(HDF5DIR) && $(CMAKE) --build . --config Release
-	cd $(HDF5DIR) && cpack -C Release CPackConfig.cmake
-	cd $(HDF5DIR) && ./HDF5-1.14.5-Linux.sh
-	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(TARGETDIR)/* $(TARGETDIR)/
-	mkdir -p $(INCDIR)/hdf5
-	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(INCDIR)/* $(INCDIR)/hdf5/
-	mkdir -p $(LIBDIR)/cmake/hdf5
-	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/cmake/* $(LIBDIR)/cmake/hdf5/
-	mkdir share
-	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/share/* share/
-	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(LIBDIR)/* $(LIBDIR)/
+	@mkdir -p $(HDF5DIR)
+	@cd $(HDF5DIR) && $(CMAKE) $(CMAKEFHDF5) ..
+	@cd $(HDF5DIR) && $(CMAKE) --build . --config Release
+	@cd $(HDF5DIR) && cpack -C Release CPackConfig.cmake
+	@cd $(HDF5DIR) && ./HDF5-1.14.5-Linux.sh
+	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(TARGETDIR)/* $(TARGETDIR)/
+	@mkdir -p $(INCDIR)/hdf5
+	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(INCDIR)/* $(INCDIR)/hdf5/
+	@mkdir -p $(LIBDIR)/cmake/hdf5
+	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/cmake/* $(LIBDIR)/cmake/hdf5/
+	@mkdir share
+	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/share/* share/
+	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(LIBDIR)/* $(LIBDIR)/
 	@echo "\033[1;34mSuccessfully compiled HDF5 library\033[0m"
 
 

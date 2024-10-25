@@ -203,6 +203,8 @@ void MCPoly::AcceptMove()
 
 void MCPoly::ToHDF5(int frame)
 {
+	std::clock_t c_start = std::clock();
+
 	using namespace H5;
 	
 	int data_pol_id[Ntad];
@@ -341,10 +343,19 @@ void MCPoly::ToHDF5(int frame)
 
 	pol_group.close();
 	file.close();
+
+	std::clock_t c_end = std::clock();
+
+	double time_elapsed_ms = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+	std::cout << "CPU time used for MCPoly::ToHDF5: " 
+          	<< time_elapsed_ms 
+          	<< " ms\n";
 }
 
 void MCPoly::ToVTK(int frame)
 {
+	std::clock_t c_start = std::clock();
+	
 	char fileName[32];
 	sprintf(fileName, "poly%05d.vtp", frame);
 	
@@ -421,6 +432,13 @@ void MCPoly::ToVTK(int frame)
 	writer->SetInputData(polyData);
 	
  	writer->Write();
+	
+	std::clock_t c_end = std::clock();
+
+	double time_elapsed_ms = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+	std::cout << "CPU time used for MCPoly::ToVTK: " 
+          	<< time_elapsed_ms 
+          	<< " ms\n";
 }
 
 void MCPoly::FromVTK(int frame)
