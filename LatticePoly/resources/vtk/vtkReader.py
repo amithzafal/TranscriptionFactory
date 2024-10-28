@@ -9,12 +9,13 @@
 import os
 
 import numpy as np
+import numba
 
 from vtk import vtkXMLPolyDataReader
 from vtk.util import numpy_support as vn
 
-# from fileseq import findSequenceOnDisk
-# from fileseq.exceptions import FileSeqException
+from fileseq import findSequenceOnDisk
+from fileseq.exceptions import FileSeqException
 
 
 class vtkReader():
@@ -176,32 +177,31 @@ class vtkReader():
 			
 			
 	def _parseFileSeqs(self):
-		list_frame = os.listdir(self.outputDir)
-		self._minFramePoly = 999999999
-		self._minFrameLiq  = 999999999
-		self._maxFramePoly = -1
-		self._maxFrameLiq  = -1
-		for frame in list_frame:
-			if frame.split(".")[-1] == "vtp":
-				if self._readPoly:
-					if frame[:4] == "poly":
-						self._minFramePoly = min(self._minFramePoly,int(frame[4:9]))
-						self._maxFramePoly = max(self._maxFramePoly,int(frame[4:9]))
-
-					
-				if self._readLiq:
-					if frame[:3] == "liq":
-						self._minFrameLiq = min(self._minFrameLiq,int(frame[3:8]))
-						self._maxFrameLiq = max(self._maxFrameLiq,int(frame[3:8]))
+		if self._readPoly:
+			try:
+				polySeq = findSequenceOnDisk(self.outputDir + '/poly@.vtp')
 		
-		print(f"minFrameLiq = {self._minFrameLiq}")
-		print(f"maxFrameLiq = {self._maxFrameLiq}")
+				self._minFramePoly = polySeq.start()
+				self._maxFramePoly = polySeq.end()
+		
+			except FileSeqException:
+				raise IOError("Could not locate any polymer configuration files in '%s'" % self.outputDir)
+		
+		if self._readLiq:
+			try:
+				liqSeq = findSequenceOnDisk(self.outputDir + '/liq@.vtp')
+		
+				self._minFrameLiq = liqSeq.start()
+				self._maxFrameLiq = liqSeq.end()
+			
+			except FileSeqException:
+				raise IOError("Could not locate any liquid configuration files in '%s'" % self.outputDir)
 		
 				
 			
 
 	@staticmethod
-	# @numba.jit("void(f4[:], f4[:,:])", nopython=True)
+	@numba.jit("void(f4[:], f4[:,:])", nopython=True)
 	def _fixPBCs(dims, pts):
 		nPoints = pts.shape[0]
 		

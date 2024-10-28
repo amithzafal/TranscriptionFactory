@@ -16,7 +16,7 @@ To download the code and compile its external library dependencies, simply copy-
 ~~~shell
 git clone --recursive https://github.com/physical-biology-of-chromatin/LatticePoly.git
 cd LatticePoly/LatticePoly
-make libvtk
+make libhdf5
 ~~~
 
 following which the code may be compiled as usual,

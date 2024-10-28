@@ -7,14 +7,14 @@
 ##
 
 import os
-# import numba
+import numba
 
 import numpy as np
 
 import h5py
 
-# from fileseq import findSequenceOnDisk
-# from fileseq.exceptions import FileSeqException
+from fileseq import findSequenceOnDisk
+from fileseq.exceptions import FileSeqException
 
 
 class hdf5Reader():
@@ -164,27 +164,26 @@ class hdf5Reader():
         def _parseFileSeqs(self):
                 if self._readPoly:
                         try:
-                                polySeq = list(self.file["Pol"].keys())
-                                polySeq.sort()
+                                polySeq = findSequenceOnDisk(self.outputDir + '/poly@.vtp')
 
-                                self._minFramePoly = int(polySeq[0].split('_')[0])
-                                self._maxFramePoly = int(polySeq[-1].split('_')[0])
-                
-                        except:
-                                raise IOError("Could not locate any polymer configuration dataset in '%s'" % self.filePath)                
+                                self._minFramePoly = polySeq.start()
+                                self._maxFramePoly = polySeq.end()
+
+                        except FileSeqException:
+                                raise IOError("Could not locate any polymer configuration files in '%s'" % self.outputDir)
+
                 if self._readLiq:
                         try:
-                                liqSeq = list(self.file["Liq"].keys())
-                                liqSeq.sort()
-                                
-                                self._minFrameLiq = int(liqSeq[0].split('_')[0])
-                                self._maxFrameLiq = int(liqSeq[-1].split('_')[0])
-                        
-                        except:
-                                raise IOError("Could not locate any liquid configuration dataset in '%s'" % self.filePath)
+                                liqSeq = findSequenceOnDisk(self.outputDir + '/liq@.vtp')
 
-        # @numba.jit("void(f4[:], f4[:,:])", nopython=True)
+                                self._minFrameLiq = liqSeq.start()
+                                self._maxFrameLiq = liqSeq.end()
+                        
+                        except FileSeqException:
+                                raise IOError("Could not locate any liquid configuration files in '%s'" % self.outputDir)
         
+        
+        @numba.jit("void(f4[:], f4[:,:])", nopython=True)
         @staticmethod
         def _fixPBCs(dims, pts):
                 nPoints = pts.shape[0]
