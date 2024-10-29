@@ -21,7 +21,7 @@ class LiqPolyCoincidence():
     def __init__(self, outputDir, fileName, initFrame, cutoff=1e-3):
 
         self.reader = hdf5Reader(outputDir, fileName, initFrame, readLiq=True, readPoly=True, backInBox=True)
-        self.filePath = os.path.join(outputDir, fileName)
+        self.filePath = os.path.join(outputDir, "process.h5")
 
         self.cutoff = cutoff
 
@@ -94,7 +94,7 @@ class LiqPolyCoincidence():
 
     def Print(self):
         self.reader.Close()
-        file = h5py.File(self.filePath, 'r+')
+        file = h5py.File(self.filePath, 'a')
         file.create_dataset("liq_Het_Coincidence", data = self.liq_Het_Cont)
         file.create_dataset("poly_Het_Coincidence", data = self.poly_Het_Cont)
         file.create_dataset("liq_PRE_Coincidence", data = self.liq_PRE_Cont)

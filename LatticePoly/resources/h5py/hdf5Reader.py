@@ -7,7 +7,7 @@
 ##
 
 import os
-import numba
+# import numba
 
 import numpy as np
 
@@ -181,9 +181,9 @@ class hdf5Reader():
                                 raise IOError("Could not locate any liquid configuration dataset in '%s'" % self.filePath)
 
       
-        @staticmethod       
-        @numba.jit("void(f4[:], f4[:,:])", nopython=True)
-        def _fixPBCs(dims, pts):
+        # @staticmethod       
+        # @numba.jit("void(f4[:], f4[:,:])", nopython=True)
+        def _fixPBCs(self, dims, pts):
                 nPoints = pts.shape[0]
                 
                 for i in range(nPoints):

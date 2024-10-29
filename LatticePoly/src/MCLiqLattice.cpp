@@ -363,7 +363,7 @@ void MCLiqLattice::ToHDF5(int frame)
 		data_density[i] = aveDensity;
 	}
 
-	const H5std_string FILE_PATH( H5fileName );
+	const H5std_string FILE_PATH( H5filePath );
 	const int RANK = 2;
 
 	// char Frame_group_Name[32];

@@ -22,7 +22,7 @@ class LiqMSD():
 
 	def __init__(self, outputDir, fileName, initFrame):
 		self.reader = hdf5Reader(outputDir, fileName, initFrame=-1, readLiq=True, readPoly=False, backInBox=False)
-		self.filePath = os.path.join(outputDir, fileName)
+		self.filePath = os.path.join(outputDir, "process.h5")
 
 
 	def Compute(self):
@@ -60,7 +60,7 @@ class LiqMSD():
 		msdLiq = self.cumulDist / self.reader.nLiq
 
 		self.reader.Close()
-		file = h5py.File(self.filePath, 'r+')
+		file = h5py.File(self.filePath, 'a')
 		file.create_dataset("liqMSD", data = msdLiq)
 	
 		print("\033[1;32mPrinted liquid MSDs to '%s'\033[0m" % "liqMSD")

@@ -19,7 +19,7 @@ class LiqDensity():
 	def __init__(self, outputDir, fileName, initFrame, threshold=0.5):
 		
 		self.reader = hdf5Reader(outputDir, fileName, initFrame=-1, readLiq=True, readPoly=False, backInBox=False)
-		self.filePath = os.path.join(outputDir, fileName)
+		self.filePath = os.path.join(outputDir, "process.h5")
 		
 		self.threshold = threshold
 
@@ -46,7 +46,7 @@ class LiqDensity():
 	def Print(self):
 
 		self.reader.Close()
-		file = h5py.File(self.filePath,'r+')
+		file = h5py.File(self.filePath,'a')
 		
 		file.create_dataset("liqMean", data = self.meanHist / self.reader.nLiq)
 		file.create_dataset("liqSTD", data = np.sqrt(self.stdHist / self.reader.nLiq))

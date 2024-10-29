@@ -19,7 +19,7 @@ class PolyGyration():
 	
 	def __init__(self, outputDir, fileName, initFrame):
 		self.reader = hdf5Reader(outputDir, fileName, initFrame, readLiq=False, readPoly=True)
-		self.filePath = os.path.join(outputDir, fileName)
+		self.filePath = os.path.join(outputDir, "process.h5")
 
 	def Compute(self):
 		self.polyAniso = np.zeros(self.reader.N, dtype=np.float32)
@@ -59,7 +59,7 @@ class PolyGyration():
 
 	def Print(self):
 		self.reader.Close()
-		file = h5py.File(self.filePath, 'r+')
+		file = h5py.File(self.filePath, 'a')
 		file.create_dataset("polyAniso", data = self.polyAniso)
 		file.create_dataset("polyGyration", data = self.polyGyration)
 		

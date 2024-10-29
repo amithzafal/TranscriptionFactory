@@ -234,7 +234,7 @@ void MCPoly::ToHDF5(int frame)
 	}
 	
 
-	const H5std_string FILE_PATH( H5fileName );
+	const H5std_string FILE_PATH( H5filePath );
 	const int RANK = 2;
 
 	// char Frame_group_Name[32];

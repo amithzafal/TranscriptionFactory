@@ -64,7 +64,7 @@ double replicRate;
 
 std::string latticeType;
 std::string polyType;
-std::string H5fileName;
+std::string H5filePath;
 
 std::string outputDir;
 std::string domainPath;
@@ -131,7 +131,7 @@ void InputParser::ParseVars()
 	latticeType     = GetValueOfKey<std::string>("latticeType");
 	
 	outputDir       = GetValueOfKey<std::string>("outputDir");
-	H5fileName	= GetValueOfKey<std::string>("H5fileName");
+	H5filePath	= GetValueOfKey<std::string>("H5filePath");
 
 	domainPath      = GetValueOfKey<std::string>("domainPath");
 	painterPath     = GetValueOfKey<std::string>("painterPath");

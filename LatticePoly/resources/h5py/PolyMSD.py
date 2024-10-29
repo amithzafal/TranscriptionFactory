@@ -20,7 +20,7 @@ class PolyMSD():
 
 	def __init__(self, outputDir, fileName, initFrame):
 		self.reader = hdf5Reader(outputDir, fileName, initFrame, readLiq=False, readPoly=True)
-		self.filePath = os.path.join(outputDir, fileName)
+		self.filePath = os.path.join(outputDir, "process.h5")
 		
 
 	def Compute(self):
@@ -72,7 +72,7 @@ class PolyMSD():
 	
 	def Print(self):
 		self.reader.Close()
-		file = h5py.File(self.filePath, 'r+')
+		file = h5py.File(self.filePath, 'a')
 		if np.count_nonzero(self.reader.polyPainter == 1) > 0:
 			msdPRE = self.cumulDistPRE / np.count_nonzero(self.reader.polyPainter == 1)
 			file.create_dataset("polyPREMSD", data = msdPRE)
@@ -96,7 +96,7 @@ class PolyMSD():
 	
 	def PrintTad(self, idxTad):
 		self.reader.Close()
-		file = h5py.File(self.filePath, 'r+')
+		file = h5py.File(self.filePath, 'a')
 		msdFile = self.reader.outputDir + "/msdTad%05d.res" % idxTad
 		file.create_dataset("msdTad%05d" % idxTad, data = self.distTad)
 		

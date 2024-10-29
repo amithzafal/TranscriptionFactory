@@ -42,7 +42,7 @@ typedef std::array<double, 3> double3;
 
 // Runtime global parameters
 extern std::string outputDir;
-extern std::string H5fileName;
+extern std::string H5filePath;
 
 extern std::string domainPath;
 extern std::string painterPath;

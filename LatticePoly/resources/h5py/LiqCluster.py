@@ -21,7 +21,7 @@ class LiqCluster():
 	def __init__(self, outputDir, fileName, initFrame, threshold=0.5, nMax=10, cutoff=1/2**0.5 + 1e-3):
 		
 		self.reader = hdf5Reader(outputDir, fileName, initFrame=-1, readLiq=True, readPoly=False, backInBox=False)
-		self.filePath = os.path.join(outputDir, fileName)
+		self.filePath = os.path.join(outputDir, "process.h5")
 		
 		self.nMax = nMax
 		self.cutoff = cutoff
@@ -68,7 +68,7 @@ class LiqCluster():
 	
 	def Print(self):
 		self.reader.Close()
-		file = h5py.File(self.filePath, 'r+')
+		file = h5py.File(self.filePath, 'a')
 		file.create_dataset("liqDropRad", data = self.dropRad)
 		file.create_dataset("liqDropNum", data = self.dropNum)
 		file.create_dataset("liqRadii", data = self.dropMean)
