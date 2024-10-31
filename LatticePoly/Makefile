@@ -39,7 +39,7 @@ OBJEXT     := o
 
 # VTK library installation path
 VTKDIR     := $(LIBDIR)/VTK/build
-HDF5DIR    := $(LIBDIR)/hdf5-1.14.5/build
+HDF5DIR    := $(LIBDIR)/hdf5/build
 
 # Required VTK modules
 MODULES    := CommonComputationalGeometry CommonCore CommonDataModel CommonExecutionModel CommonMath CommonMisc CommonSystem CommonTransforms FiltersCore FiltersGeneral FiltersSources IOCore IOXML IOXMLParser
@@ -47,7 +47,7 @@ MODULES    := CommonComputationalGeometry CommonCore CommonDataModel CommonExecu
 VTKMODS    := $(foreach mod,$(MODULES),-DVTK_MODULE_ENABLE_VTK_$(mod)=YES)
 VTKLIBS    := $(foreach mod,$(MODULES),-lvtk$(mod))
 
-HDF5LIBS   := -lhdf5 -lhdf5_cpp
+HDF5LIBS   := -lhdf5 -lhdf5_cpp 
 
 
 # Flags, libraries and includes
@@ -57,7 +57,7 @@ FPATHS     := -D__DPATH__=$(CURDIR)/$(DATDIR)
 FEXTRA     := -D__VERSION_MAJOR__=$(VSN_MAJ) -D__VERSION_MINOR__=$(VSN_MIN) -DNDEBUG
 CXXFLAGS   := -std=c++11 -Wshadow -Wall -Wextra -O3 -ffast-math -flto
 CMAKEFLAGS := -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(CURDIR) -DVTK_VERSIONED_INSTALL=OFF -DVTK_BUILD_TESTING=OFF -DVTK_GROUP_ENABLE_Rendering=NO -DVTK_GROUP_ENABLE_StandAlone=NO $(VTKMODS)
-CMAKEFHDF5 := -G "Unix Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SHARED_LIBS:BOOL=OFF -DBUILD_TESTING:BOOL=OFF -DHDF5_BUILD_TOOLS:BOOL=ON -DHDF5_BUILD_CPP_LIB:BOOL=ON 
+CMAKEFHDF5 := -G "Unix Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SHARED_LIBS:BOOL=ON -DBUILD_TESTING:BOOL=OFF -DHDF5_BUILD_TOOLS:BOOL=ON -DHDF5_BUILD_CPP_LIB:BOOL=ON 
 
 # Object files lists
 SOURCES    := $(shell find $(SRCDIR) -type f -iname "*.$(SRCEXT)")
@@ -139,20 +139,23 @@ libvtk: $(VTKDIR)/Makefile
 
 libhdf5:
 	@echo "\033[1;34mBuilding HDF5 library...\033[0m"
-	@mkdir -p $(HDF5DIR)
-	@cd $(HDF5DIR) && $(CMAKE) $(CMAKEFHDF5) ..
-	@cd $(HDF5DIR) && $(CMAKE) --build . --config Release
-	@cd $(HDF5DIR) && cpack -C Release CPackConfig.cmake
-	@cd $(HDF5DIR) && ./HDF5-1.14.5-Linux.sh
-	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(TARGETDIR)/* $(TARGETDIR)/
-	@mkdir -p $(INCDIR)/hdf5
-	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(INCDIR)/* $(INCDIR)/hdf5/
-	@mkdir -p $(LIBDIR)/cmake/hdf5
-	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/cmake/* $(LIBDIR)/cmake/hdf5/
-	@mkdir share
-	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/share/* share/
-	@mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(LIBDIR)/* $(LIBDIR)/
-	@echo "\033[1;34mSuccessfully compiled HDF5 library\033[0m"
+	mkdir -p $(HDF5DIR)
+# cd $(HDF5DIR) && $(CMAKE) $(CMAKEFHDF5) ..
+# cd $(HDF5DIR) && $(CMAKE) --build . --config Release
+# cd $(HDF5DIR) && cpack -C Release CPackConfig.cmake
+	cd $(HDF5DIR) && ./HDF5-1.14.5-Linux.sh
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(TARGETDIR)/* $(TARGETDIR)/
+	mkdir -p $(INCDIR)/hdf5
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(INCDIR)/* $(INCDIR)/hdf5/
+	mkdir -p $(LIBDIR)/cmake/hdf5
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/cmake/* $(LIBDIR)/cmake/hdf5/
+	mkdir -p share/hdf5
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/share/* share/hdf5/
+	mkdir -p lib/pkgconfig
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(LIBDIR)/pkgconfig/* $(LIBDIR)/pkgconfig/
+	rm -rf $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(LIBDIR)/pkgconfig
+	mv $(HDF5DIR)/HDF5-1.14.5-Linux/HDF_Group/HDF5/1.14.5/$(LIBDIR)/* $(LIBDIR)/
+	echo "\033[1;34mSuccessfully compiled HDF5 library\033[0m"
 
 
 # Non-file targets
