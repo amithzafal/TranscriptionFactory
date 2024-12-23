@@ -110,7 +110,6 @@ struct UpdateTADImpl<MCLattice, MCPoly>
 		
 
 		double dE;
-		
 		pol->TrialMove(&dE);
 		
 		if ( pol->tadUpdater->legal )
@@ -227,7 +226,7 @@ struct UpdateReplImpl<MCLiqLattice, MCReplicPoly>
 		pol->ForkMove();
 		
 		//extruders moves
-		if(pol->Ntad==Nchain*2)
+		if(pol->Ntad==Nchain*2 or 0==0)
 		{
 			if(pol->individual_N_extruders!=0)
 			{
@@ -253,13 +252,12 @@ struct UpdateReplImpl<MCLattice, MCReplicPoly>
 		//pol->OriginMove_implicit();
 		pol->ForkMove();
 		//extruders moves
-		if(n_barriers>-1)
+		if(n_barriers>0)
 		{
-			if(pol->Ntad==Nchain*2 or 0==0)
+			if(pol->Ntad==2*pol->individual_Nchain)
 			{
 				if(pol->individual_N_extruders!=0)
 				{
-					//std::cout <<  "loadin_Updater"<< std::endl;
 					pol->unLoadExtruders();
 					int extruders_moves = pol->individual_N_extruders- pol->active_extruders.size();
 					for (int i=0 ; i < extruders_moves ; ++i)

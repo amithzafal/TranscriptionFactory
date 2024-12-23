@@ -68,8 +68,22 @@ sed -e "${DIRSUB}" < /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/res
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${TMPDIR}  700 2 100
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome.py  ${TMPDIR}   2 100
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  520 5 80
-python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  550 4 50
-python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  550 3 50
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  500 4 100
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  600 4 100
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  700 4 100
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  800 4 100
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  900 4 100
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  1000 4 100
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  1200 4 100
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  1400 4 100
+
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  700 2 100
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  700 6 100
+
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  500 4 400
+python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  750 4 20
+
+
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_S_phase.py ${TMPDIR}  520 4 80
 #MonomerDist_HiC_full_genome_cis.py
 #python3 /home/ddasaro/Yeast_full_genome/LatticePoly/LatticePoly/resources/MonomerDist_HiC_full_genome_trans.py ${TMPDIR}  550 4 50
@@ -98,9 +112,9 @@ mv ${SLURM_SUBMIT_DIR}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.err ${TMPDIR
 
 # Create data directory on local disk
 #[ ! -d "${DATDIR}" ] && mkdir -p ${DATDIR}
-mkdir /Xnfs/physbiochrom/ddasaro/year3/September24/full_genome_S/
+mkdir /Xnfs/physbiochrom/ddasaro/year3/October24/full_genome_S/
 # Archive output files to home directory
-tar --transform "s|^|${OUTDIR}/|" -czf /Xnfs/physbiochrom/ddasaro/year3/September24/full_genome_M/${OUTDIR}.tar.gz -C ${TMPDIR} .
+tar --transform "s|^|${OUTDIR}/|" -czf /Xnfs/physbiochrom/ddasaro/year3/October24/${OUTDIR}.tar.gz -C ${TMPDIR} .
 #tar -xzf ${DATDIR}/${OUTDIR}.tar.gz -C /Xnfs/lbmcdb/Jost_team/ddasaro/year2/April23/Ring/100
 #rm -rf {DATDIR}/${OUTDIR}.tar.gz
 

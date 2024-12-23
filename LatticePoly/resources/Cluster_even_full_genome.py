@@ -37,7 +37,7 @@ class cluster_full_genome():
 		for i in range(0,17):
 			self.readers.append(vtkReader(outputDir, i,initFrame,readLiq=False, readPoly=True))
 			self.N_chain.append(np.sum([(self.readers[i].status==-1)+(self.readers[i].status==0)]))
-		self.Forks_per_clusterFile = os.path.join(outputDir,str(r)+"_"+str(initFrame)+"_"+str(interval)+"_cluster_eve_full_genome.res")
+		self.Forks_per_clusterFile = os.path.join(outputDir,str(r)+"_"+str(initFrame)+"_"+str(interval)+"_forks_"+str(forks_n)+"_cluster_even_full_genome.res")
 		self.Compute(interval)
 		self.Print()
 
@@ -76,7 +76,7 @@ class cluster_full_genome():
 		tot_forks=np.nansum(np.array([len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)]))
 		for e in [len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)]:
 
-			self.forks_per_cluster[round_to_even(228*e/tot_forks)]+=1
+			self.forks_per_cluster[round_to_even(forks_n*e/tot_forks)]+=1
 		#print(sorted(nx.connected_components(G), key=len, reverse=True))
 
 
@@ -94,7 +94,7 @@ class cluster_full_genome():
 
 
 if __name__ == "__main__":
-	if len(sys.argv) != 5:
+	if len(sys.argv) != 6:
 		print("\033[1;31mUsage is %s outputDir initFrame r interval \033[0m" % sys.argv[0])
 		sys.exit()
 	
@@ -102,8 +102,7 @@ if __name__ == "__main__":
 	initFrame = int(sys.argv[2])
 	r=float(sys.argv[3])
 	interval=int(sys.argv[4])
-	
-	#init_time=int(sys.argv[4])
+	forks_n=int(sys.argv[5])
 
 
 monom = cluster_full_genome(outputDir, initFrame=initFrame)

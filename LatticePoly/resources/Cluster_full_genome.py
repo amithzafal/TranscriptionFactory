@@ -76,11 +76,12 @@ class cluster_full_genome():
 			A[i,j] = A[i,j] + 1
 			A[j,i] = A[j,i] + 1
 
+		np.fill_diagonal(A,1)
 		G = nx.from_numpy_matrix(A)
 		self.cluster_number.append(len([len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)]))
 		for e in [len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)]:
 			self.forks_per_cluster[e]+=1
-		print(sorted(nx.connected_components(G), key=len, reverse=True))
+		print([len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)])
 		self.Forks_number.append(np.sum(np.array(forks_for_chrom)))
 		cis_connected_components=0
 		for i in range(0,17):
