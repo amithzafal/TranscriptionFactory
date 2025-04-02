@@ -38,6 +38,7 @@ MCLattice::MCLattice()
 		opp[2*i+1]   = 2*(i+1);
 		opp[2*(i+1)] = 2*i+1;
 	}
+
 }
 
 void MCLattice::ReadInputArrays()
@@ -81,6 +82,7 @@ void MCLattice::ReadInputArrays()
 
 void MCLattice::Init(int)
 {
+	int N_eff=Ntot;
 	for ( int vi = 0; vi < Ntot; ++vi )
 	{
 		int iz = vi/(2*L2);
@@ -119,8 +121,20 @@ void MCLattice::Init(int)
 			int izp = (int) 4*zp;
 			
 			bitTable[v+1][vi] = ixp + iyp*L + izp*L2;
+
+			}
+			double c = (L-0.5)/2; //spherical confinement
+			double d2 = SQR(xyzTable[0][vi]-c)+SQR(xyzTable[1][vi]-c)+SQR(xyzTable[2][vi]-c);
+			if ( d2 >= SQR((L-0.5)/2) )
+			{
+				bitTable[0][vi] = 50;
+				--N_eff;
+	
 		}
 	}
+
+	std::cout << "sites= " <<  N_eff<< std::endl;
+
 	
 	if ( RestartFromFile )
 		BoxFromVTK();

@@ -41,6 +41,7 @@ struct MCTad
 	int type;
 	int links;
 	int status;
+	bool is_repulsive;
 	
 	int sisterID;
 	

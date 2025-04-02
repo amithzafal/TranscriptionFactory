@@ -20,6 +20,8 @@ public:
 
 	void Init(int);
 	void GenerateHedgehog(int);
+	void GenerateHedgehog_linear_backbone(int);
+
 	
 	void ToVTK(int);
 	void FromVTK(int);

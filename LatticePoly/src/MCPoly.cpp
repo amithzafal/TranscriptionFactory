@@ -32,13 +32,17 @@ void MCPoly::Init(int Ninit)
 	if ( RestartFromFile )
 		FromVTK(Ninit);
 	else
-		GenerateHedgehog(L/2);
+		GenerateHedgehog_linear_backbone(int(sqrt(Nchain/3)));
 
 	for ( auto bond = tadTopo.begin(); bond != tadTopo.end(); ++bond )
 		SetBond(*bond);
 	
 	std::cout << "Running with initial polymer density " << Ntad / ((double) Ntot) << std::endl;
 	std::cout << "Using " << Ntad << " TADs, including main chain of length " << Nchain << std::endl;
+
+	tadConf.at(0).is_repulsive=true;
+	tadConf.at(Nchain-1).is_repulsive=true;
+
 }
 
 void MCPoly::SetBond(MCBond& bond)
@@ -59,6 +63,108 @@ void MCPoly::SetBond(MCBond& bond)
 	if ( !bond.isSet || (tad2->links == 0) ) ++tad2->links;
 	
 	bond.isSet = true;
+}
+
+void MCPoly::GenerateHedgehog_linear_backbone(int lim)
+{
+	Ntad = Nchain;
+	Nbond = Nchain-1;
+	
+	tadConf.resize(Ntad);
+	tadTopo.resize(Nbond);
+	
+	for ( int t = 0; t < Ntad; ++t )
+		tadConf[t].sisterID = t;
+
+	for ( int b = 0; b < Nbond; ++b )
+	{
+		tadTopo[b].id1 = b;
+		tadTopo[b].id2 = b+1;
+	}
+	
+	int turn1[7];
+	
+	turn1[0] = 12;
+	turn1[1] = 12;
+	turn1[2] = 1;
+	turn1[3] = 1;
+	turn1[4] = 11;
+	turn1[5] = 11;
+	turn1[6] = 2;
+
+	int turn2[7];
+	
+	turn2[0] = 12;
+	turn2[1] = 1;
+	turn2[2] = 1;
+	turn2[3] = 11;
+	turn2[4] = 11;
+	turn2[5] = 2;
+	turn2[6] = 2;
+	
+	int vi = 2*CUB(L) + SQR(L) + L/2; // Set to lat->rngEngine() % Ntot for random chromosome placement
+	
+	tadConf[0].pos = vi;
+	lat->bitTable[0][vi] = 1;
+	
+	int ni = 1;
+	int dir1 = lat->rngEngine() % 12;
+	for ( int i = 0; i < lim; ++i )
+	{
+		for ( int j = 0; j < 2; ++j )
+		{
+			int turn = dir1+1;
+			
+			tadTopo[ni-1].dir = turn;
+			tadConf[ni].pos = lat->bitTable[turn][tadConf[ni-1].pos];
+			
+			lat->bitTable[0][tadConf[ni].pos] = 1;
+			
+			++ni;
+		}
+		
+		tadTopo[ni-1].dir = 10;
+		tadConf[ni].pos = lat->bitTable[10][tadConf[ni-1].pos];
+		
+		lat->bitTable[0][tadConf[ni].pos] = 1;
+		
+		++ni;
+	}
+	
+	--ni;
+	
+	while ( ni < Nbond )
+	{
+		int t = lat->rngEngine() % ni;
+		int iv = lat->rngEngine() % lat->nbNN[0][0][tadTopo[t].dir];
+		
+		int nd1 = lat->nbNN[2*iv+1][0][tadTopo[t].dir];
+		int nd2 = lat->nbNN[2*(iv+1)][0][tadTopo[t].dir];
+		
+		int en2 = tadConf[t].pos;
+		int v1 = (nd1 == 0) ? en2 : lat->bitTable[nd1][en2];
+		
+		int b = lat->bitTable[0][v1];
+					
+		if ( b == 0 )
+		{
+			for ( int i = ni+1; i > t+1; --i )
+			{
+				tadConf[i].pos = tadConf[i-1].pos;
+				tadTopo[i].dir = tadTopo[i-1].dir;
+			}
+			
+			tadConf[t+1].pos = v1;
+			
+			tadTopo[t].dir = nd1;
+			tadTopo[t+1].dir = nd2;
+
+			lat->bitTable[0][v1] = 1;
+			
+			++ni;
+		}
+	}
+	
 }
 
 void MCPoly::GenerateHedgehog(int lim)
@@ -169,6 +275,32 @@ void MCPoly::TrialMove(double* dE)
 	
 	tadUpdater->TrialMove(tadTrial, dE);
 	*dE = tadUpdater->legal ? *dE : 0.;
+
+	int gen_dist=Nchain-1;
+	if(tadTrial->is_repulsive)
+	{
+		int other_repulsive = !tadTrial->isLeftEnd() ? 0 : Nchain-1;
+		auto extreme   = &tadConf.at(other_repulsive);
+
+		std::vector<double>center={lat->xyzTable[0][extreme->pos], lat->xyzTable[1][extreme->pos], lat->xyzTable[2][extreme->pos]};
+		double old_dist=0.0;
+		double new_dist=0.0;
+		for ( int dir = 0; dir < 3; ++dir )
+		{
+			double distance=lat->xyzTable[dir][tadUpdater->vo]-center[dir];
+			old_dist=old_dist+SQR(distance);
+			
+			double distance1=lat->xyzTable[dir][tadUpdater->vn]-center[dir];
+			new_dist=new_dist+SQR(distance1);
+		}
+		
+
+		if((old_dist>SQR((0.7*gen_dist)*0.9)) or (old_dist>SQR(0.7*gen_dist*0.9)))
+			return;
+
+		*dE+=10*(old_dist-new_dist);
+
+	}
 }
 
 void MCPoly::AcceptMove()
