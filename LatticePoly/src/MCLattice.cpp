@@ -120,55 +120,54 @@ void MCLattice::Init(int)
 			
 			bitTable[v+1][vi] = ixp + iyp*L + izp*L2;
 		}
+        
+        // Center of the lattice cube
+        int centerVI = 2*CUB(L) + SQR(L) + L/2;
+        
+        // Get the xyz coordinates of the center
+        double centerX = xyzTable[0][centerVI];
+        double centerY = xyzTable[1][centerVI];
+        double centerZ = xyzTable[2][centerVI];
+        
+        // Calculate the actual center of the SphereStructure
+        // Note: We're assuming cF is a scalar distance along the vector (1,1,1)
+        double sphereCenterX = centerX + cF/sqrt(3.0);
+        double sphereCenterY = centerY + cF/sqrt(3.0);
+        double sphereCenterZ = centerZ + cF/sqrt(3.0);
+        
+        // Calculate squared radius for comparison
+        double rFSquared = SQR(rF);
+        
+        // Combined loop: initialize and check distances in one pass
+        for (int vi = 0; vi < Ntot; ++vi)
+        {
+            // Default to outside
+            factoryTable[vi] = 0;
+            
+            // Get the coordinates of this lattice point
+            double x = xyzTable[0][vi];
+            double y = xyzTable[1][vi];
+            double z = xyzTable[2][vi];
+            
+            // Calculate squared distance from sphere center
+            double d2 = SQR(x - sphereCenterX) +
+                        SQR(y - sphereCenterY) +
+                        SQR(z - sphereCenterZ);
+            
+            // Check if point is inside sphere and set value in one step
+            if (d2 <= rFSquared)
+            {
+                factoryTable[vi] = 1;
+            }
+        }
+        
+        
 	}
 	
 	if ( RestartFromFile )
 		BoxFromVTK();
 	else
 		BoxToVTK();
-}
-
-void MCLattice::SphereStructure()
-{
-    // Center of the lattice cube
-    int centerVI = 2*CUB(L) + SQR(L) + L/2;
-    
-    // Get the xyz coordinates of the center
-    double centerX = xyzTable[0][centerVI];
-    double centerY = xyzTable[1][centerVI];
-    double centerZ = xyzTable[2][centerVI];
-    
-    // Calculate the actual center of the SphereStructure
-    // Note: We're assuming cF is a scalar distance along the vector (1,1,1)
-    double sphereCenterX = centerX + cF/sqrt(3.0);
-    double sphereCenterY = centerY + cF/sqrt(3.0);
-    double sphereCenterZ = centerZ + cF/sqrt(3.0);
-    
-    // Calculate squared radius for comparison
-    double rFSquared = SQR(rF);
-    
-    // Combined loop: initialize and check distances in one pass
-    for (int vi = 0; vi < Ntot; ++vi)
-    {
-        // Default to outside
-        factoryTable[vi] = 0;
-        
-        // Get the coordinates of this lattice point
-        double x = xyzTable[0][vi];
-        double y = xyzTable[1][vi];
-        double z = xyzTable[2][vi];
-        
-        // Calculate squared distance from sphere center
-        double d2 = SQR(x - sphereCenterX) +
-                    SQR(y - sphereCenterY) +
-                    SQR(z - sphereCenterZ);
-        
-        // Check if point is inside sphere and set value in one step
-        if (d2 <= rFSquared)
-        {
-            factoryTable[vi] = 1;
-        }
-    }
 }
 
 void MCLattice::BoxToVTK()

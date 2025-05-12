@@ -21,7 +21,6 @@ public:
     MCLattice();
 	
 	void Init(int);
-    void SphereStructure();
 	void ToVTK(int) {};
 	
 	void BoxToVTK();
