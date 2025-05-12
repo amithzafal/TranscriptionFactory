@@ -62,8 +62,9 @@ struct UpdateTADImpl<MCLattice, polymer>
 
 		if ( pol->tadUpdater->legal )
 		{
-			double dEeff = pol->GetEffectiveEnergy();
-			bool acceptMove = MetropolisMove(lat, dE+dEeff);
+			double dEeff  = pol->GetEffectiveEnergy();
+            double dEfact = pol->GetFactoryEnergy(lat->factoryTable);
+			bool acceptMove = MetropolisMove(lat, dE+dEeff+dEfact);
 		
 			if ( acceptMove )
 			{

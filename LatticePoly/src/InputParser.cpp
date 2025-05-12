@@ -37,6 +37,10 @@ double Jll;
 double Jlp;
 double Jpp;
 
+int rF;
+int cF;
+double Jfp;
+
 double inactiveRatio;
 double mutationRatio;
 

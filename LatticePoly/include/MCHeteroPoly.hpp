@@ -23,6 +23,7 @@ public:
 
 	double GetEffectiveEnergy() const;
 	double GetCouplingEnergy(const int[Ntot]) const;
+    double GetFactoryEnergy(const int[Ntot]) const;
 	
 	int hetTable[Ntot];
 	

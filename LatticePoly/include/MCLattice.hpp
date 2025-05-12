@@ -21,6 +21,7 @@ public:
     MCLattice();
 	
 	void Init(int);
+    void SphereStructure();
 	void ToVTK(int) {};
 	
 	void BoxToVTK();
@@ -29,6 +30,7 @@ public:
 	int opp[13];
 	int nbNN[13][13][13];
 	int bitTable[13][Ntot];
+    int factoryTable[Ntot];
 		
 	double nbXYZ[3][13];
 	double cTheta[13][13];

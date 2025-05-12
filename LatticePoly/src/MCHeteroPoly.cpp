@@ -127,6 +127,30 @@ double MCHeteroPoly::GetCouplingEnergy(const int spinTable[Ntot]) const
 	return 0.;
 }
 
+double MCHeteroPoly::GetFactoryEnergy(const int factoryTable[Ntot]) const
+{
+    if ( Jfp > 0. )
+    {
+        if ( tadTrial->type == 1 )
+        {
+            double dE = 0.;
+        
+            for ( int v = 0; v < 13; ++v )
+            {
+                int vi1 = (v == 0) ? tadUpdater->vo : lat->bitTable[v][tadUpdater->vo];
+                int vi2 = (v == 0) ? tadUpdater->vn : lat->bitTable[v][tadUpdater->vn];
+            
+                dE += factoryTable[vi1];
+                dE -= factoryTable[vi2];
+            }
+        
+            return Jfp * dE;
+        }
+    }
+    
+    return 0.;
+}
+
 vtkSmartPointer<vtkPolyData> MCHeteroPoly::GetVTKData()
 {
 	vtkSmartPointer<vtkPolyData> polyData = MCPoly::GetVTKData();
