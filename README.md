@@ -14,8 +14,8 @@ MC simulations of polymer and liquid-liquid phase separation on a face-centered 
 To download the code and compile its external library dependencies, simply copy-paste the following lines into a terminal:
 
 ~~~shell
-git clone --recursive https://github.com/physical-biology-of-chromatin/LatticePoly.git
-cd LatticePoly/LatticePoly
+git clone --recursive https://github.com/amithzafal/TranscriptionFactory.git
+cd TranscriptionFactory/LatticePoly
 make libvtk
 ~~~
 
